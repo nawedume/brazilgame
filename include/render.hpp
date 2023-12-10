@@ -15,14 +15,14 @@ namespace game {
 	struct RenderState {
 		u32 TotalSize;
 		u32 CurrentSize;
-		u32 Vao;
-		u32 Vbo;
+		GLuint Vao;
+		GLuint Vbo;
 	};
 
 	struct Vertex {
 		vec2 Pos;
 		vec3 Color; // @todo Remove when adding the texture support
-		vec2 TexCoords;
+		vec2 TexCoord;
 	};
 
 	struct Camera {
@@ -44,15 +44,26 @@ namespace game {
 
 	extern Camera* camera;
 
-	extern RenderState* StaticRenderState;
-	extern RenderState* DynamicRenderState;
+	struct DrawInfo {
+		u32 BufferIndex;
+		GLuint TextureRef;
+	};
+
+	extern DrawInfo PlayerDrawInfo;
+	extern DrawInfo ChuDrawInfo;
+	extern DrawInfo TreeDrawInfo;
+	extern DrawInfo GrassDrawInfo;
 
 	extern void CreateVao(RenderState* state, bool isStatic);
 
 	extern void InitRenderState();
 
-	extern void RenderAddBlock(RenderState* state, Block block, vec3 baseColor);
+	extern u32 RenderAddBlock(RenderState* state, Block block, vec3 baseColor);
 
-	extern void Draw(Shader* shader, RenderState* state);
+	extern u32 RenderAddBlock(RenderState* state, Block block, vec3 baseColor, vec2 texCoord);
+
+	extern void Draw(DrawInfo& drawInfo, vec2 position, vec2 scale);
+
+	extern void Draw(DrawInfo& drawInfo, vec2 position, vec2 scale, vec2 textureOffset);
 };
 

@@ -3,3 +3,5 @@ include/
 -I
 lib/
 -D DEBUG
+-I
+/usr/local/include

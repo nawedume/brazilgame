@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cinttypes>
 #include <vector>
 #include <glm/glm.hpp>
 
@@ -18,6 +17,9 @@ typedef double f64;
 
 using namespace glm;
 
+const ivec2 X_AXIS = vec2(1.0, 0.0);
+const ivec2 Y_AXIS = vec2(0.0, 1.0);
+
 namespace game {
 	using namespace std;
 	using namespace glm;
@@ -25,11 +27,6 @@ namespace game {
 	struct Block {
 		vec2 WorldPosStart {};
 		vec2 WorldPosEnd {};
-	};
-
-	struct World {
-		vector<Block> StaticBlocks;
-		vector<Block> DynamicBlocks;
 	};
 
 }
