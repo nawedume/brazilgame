@@ -65,7 +65,7 @@ namespace game {
 		PlayerDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 0.1, 0.1, 0.6 });
 		PlayerDrawInfo.TextureRef = GenerateTexture("./assets/Man.png");
 
-		ChuDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 1.0, 0.0, 0.3 }, { 0.5, 0.5 });
+		ChuDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 1.0, 0.0, 0.3 }, { 1.0, 0.25 });
 		ChuDrawInfo.TextureRef = GenerateTexture("./assets/Chu.png");
 
 		GrassDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 0.4, 1.0, 0.6 });

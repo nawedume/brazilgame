@@ -13,6 +13,7 @@ namespace game {
 	extern const u32 KEY_A;
 	extern const u32 KEY_S;
 	extern const u32 KEY_D;
+	extern const u32 KEY_R;
 	extern const u32 KEY_SPACE;
 	extern const u32 KEY_LEFT_SHIFT;
 

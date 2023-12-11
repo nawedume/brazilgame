@@ -16,13 +16,13 @@ namespace game {
 
 	vec2 texOffsetFromDir(ivec2 dir) {
 		if (dir == X_AXIS) {
-			return vec2(0.5f, 0.5f);
+			return vec2(0.0f, 0.25f);
 		} else if (dir == -X_AXIS) {
-			return vec2(0.5f, 0.0f);
-		} else if (dir == -Y_AXIS) {
-			return vec2(0.0f, 0.5f);
-		} else {
 			return vec2(0.0f, 0.0f);
+		} else if (dir == -Y_AXIS) {
+			return vec2(0.0f, 0.75f);
+		} else {
+			return vec2(0.0f, 0.55f);
 		}
 	}
 
@@ -44,7 +44,7 @@ namespace game {
 				} else if (holds_alternative<Chu>(*ref)) {
 					Chu chu = get<Chu>(*ref);
 					vec2 texOffset  = texOffsetFromDir(chu.Dir);
-					Draw(ChuDrawInfo, getClipPos(grid, i, j), cellScale, texOffset);
+					Draw(ChuDrawInfo, getClipPos(grid, i, j), cellScale * 0.8f, texOffset);
 				}
 			}
 		}

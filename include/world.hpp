@@ -40,7 +40,6 @@ namespace game {
 	};
 
 
-
 	struct Grid {
 		u8 Height;
 		u8 Width;

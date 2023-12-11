@@ -13,6 +13,7 @@ namespace game {
 	const u32 KEY_A = GLFW_KEY_A;
 	const u32 KEY_S = GLFW_KEY_S;
 	const u32 KEY_D = GLFW_KEY_D;
+	const u32 KEY_R = GLFW_KEY_R;
 	const u32 KEY_SPACE = GLFW_KEY_SPACE;
 	const u32 KEY_LEFT_SHIFT = GLFW_KEY_LEFT_SHIFT;
 
