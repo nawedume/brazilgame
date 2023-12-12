@@ -21,7 +21,8 @@ int main() {
 	game::setupGlad();
 	game::InitRenderState();
 
-	game::Level currentLevel = game::createLevel2();
+	u32 levelIdx = 2;
+	game::Level currentLevel = game::createLevel(levelIdx);
 
 	f32 PreviousTime = 0.0f;
 	while (!game::shouldCloseWindow()) {
@@ -36,7 +37,7 @@ int main() {
 		game::clearWindow(0.6, 0.8, 0.6, 1.0);
 
 		if (game::isKeyClicked(game::KEY_R)) {
-			currentLevel = game::createLevel2();
+			currentLevel = game::createLevel(levelIdx);
 		}
 
 		game::next(currentLevel);

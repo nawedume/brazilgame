@@ -68,6 +68,23 @@ namespace game {
 				Data[i] = ref;
 			}
 		}
+
+		void fillRow(u8 row, CellRef ref) {
+			u8 rowIdx = row * Width;
+			for (u8 col = 0; col < Height; col++) {
+				Data[rowIdx + col] = ref;
+			}
+		}
+
+		void fillCol(u8 col, CellRef ref) {
+			for (u8 row = 0; row < Height; row++) {
+				Data[index(row, col)] = ref;
+			}
+		}
+
+		inline u16 index(u8 row, u8 col) {
+			return (row * Width) + col;
+		}
 	};
 
 	extern bool isInBounds(ivec2 position, game::Grid* grid);

@@ -34,17 +34,17 @@ namespace game {
 		cellScale.x = 1.0f / grid->Width;
 		cellScale.y = 1.0f / grid->Height;
 
-		for (u32 i = 0; i < grid->Width; i++) {
-			for (u32 j = 0; j < grid->Height; j++) {
-				CellRef* ref = grid->get(i, j);
+		for (u32 row = 0; row < grid->Height; row++) {
+			for (u32 col = 0; col < grid->Width; col++) {
+				CellRef* ref = grid->get(row, col);
 				if (holds_alternative<Player>(*ref)) {
-					Draw(PlayerDrawInfo, getClipPos(grid, i, j), cellScale);
+					Draw(PlayerDrawInfo, getClipPos(grid, row, col), cellScale);
 				} else if (holds_alternative<Scenery>(*ref)) {
-					Draw(TreeDrawInfo, getClipPos(grid, i, j), cellScale);
+					Draw(TreeDrawInfo, getClipPos(grid, row, col), cellScale);
 				} else if (holds_alternative<Chu>(*ref)) {
 					Chu chu = get<Chu>(*ref);
 					vec2 texOffset  = texOffsetFromDir(chu.Dir);
-					Draw(ChuDrawInfo, getClipPos(grid, i, j), cellScale * 0.8f, texOffset);
+					Draw(ChuDrawInfo, getClipPos(grid, row, col), cellScale * 0.8f, texOffset);
 				}
 			}
 		}

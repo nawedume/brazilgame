@@ -13,8 +13,7 @@ namespace game {
 		u32 step;
 	};
 
-	extern Level createLevel1();
-	extern Level createLevel2();
+	extern Level createLevel(u32 levelIdx);
 
 	extern void next(Level& level);
 };
