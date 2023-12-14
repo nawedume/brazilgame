@@ -6,14 +6,19 @@
 namespace game {
 	using namespace std;
 
+	struct Flags {
+		u8 completed : 1;
+	};
+
 	struct Level {
 		Grid grid;
 		Player player;
 		ivec2 playerPos;
 		u32 step;
+		Flags flags { 0 };
 	};
 
 	extern Level createLevel(u32 levelIdx);
 
 	extern void next(Level& level);
-};
+}

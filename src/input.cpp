@@ -15,6 +15,7 @@ namespace game {
 	const u32 KEY_D = GLFW_KEY_D;
 	const u32 KEY_R = GLFW_KEY_R;
 	const u32 KEY_SPACE = GLFW_KEY_SPACE;
+	const u32 KEY_P = GLFW_KEY_P;
 	const u32 KEY_LEFT_SHIFT = GLFW_KEY_LEFT_SHIFT;
 
 	MM MouseMovement = {};
@@ -53,6 +54,29 @@ namespace game {
 
 		MouseMovement.xPos = xpos;
 		MouseMovement.yPos = ypos;
+	}
+
+	s8 getNumericKeyPressed() {
+		for (int i = 0; i < 10; i++) {
+			if (glfwGetKey(window, GLFW_KEY_0 + i) == GLFW_PRESS) {
+				return i;
+			}
+		}
+
+		return -1;
+	}
+
+	bool isLeftMouseClicked(vec2* pos) {
+		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+			f64 x, y;
+			glfwGetCursorPos(window, &x, &y);
+			printf(">>> %f,%f\n", x, y);
+			pos->x = x;
+			pos->y = y;
+			return true;
+		}
+
+		return false;
 	}
 
 	void tick() {

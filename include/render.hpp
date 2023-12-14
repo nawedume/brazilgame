@@ -53,6 +53,7 @@ namespace game {
 	extern DrawInfo ChuDrawInfo;
 	extern DrawInfo TreeDrawInfo;
 	extern DrawInfo GrassDrawInfo;
+	extern DrawInfo NextLevelPortalDrawInfo;
 
 	extern void CreateVao(RenderState* state, bool isStatic);
 

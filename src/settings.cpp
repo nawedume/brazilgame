@@ -2,6 +2,6 @@
 
 namespace game {
 
-	u32 WIDTH = 1000;
-	u32 HEIGHT = 1000;
+	u32 WIDTH = 800;
+	u32 HEIGHT = 800;
 };

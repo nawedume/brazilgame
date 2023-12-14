@@ -6,7 +6,7 @@
 
 namespace game {
 
-	const u8 REFRESH_RATE = 20;
+	const u8 REFRESH_RATE = 10;
 	extern const u32 KEY_E;
 	extern const u32 KEY_Q;
 	extern const u32 KEY_W;
@@ -14,6 +14,7 @@ namespace game {
 	extern const u32 KEY_S;
 	extern const u32 KEY_D;
 	extern const u32 KEY_R;
+	extern const u32 KEY_P;
 	extern const u32 KEY_SPACE;
 	extern const u32 KEY_LEFT_SHIFT;
 
@@ -29,6 +30,10 @@ namespace game {
 	extern bool isKeyClicked(int key);
 
 	extern bool isKeyPressed(int key);
+	
+	extern s8 getNumericKeyPressed(); 
+
+	extern bool isLeftMouseClicked(vec2* pos);
 
 	extern void tick();
 }

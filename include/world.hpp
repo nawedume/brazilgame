@@ -10,17 +10,14 @@ namespace game {
 	struct Player;
 	struct Scenery;
 	struct Grass;
-	typedef std::variant<Player, Chu, Scenery, Grass> CellRef;
+	struct NextLevelPortal;
+	typedef std::variant<Player, Chu, Scenery, Grass, NextLevelPortal> CellRef;
 
 	struct Player {
 		ivec2 Dir;
 	};
 
 	typedef void (*ControllerFn)(ivec2 pos, Grid* grid, u32 step);
-
-	extern ivec2 CommonAttack(ivec2 pos, Grid* grid, u32 step);
-
-	extern void CommonRotate(ivec2 const axis[4], ivec2 pos, Grid* grid, u32 step);
 
 	struct Chu {
 		ivec2 Dir;
@@ -39,6 +36,13 @@ namespace game {
 
 	};
 
+	struct NextLevelPortal {
+	};
+
+	struct Cell {
+		ivec2 Pos;
+		CellRef ref;
+	};
 
 	struct Grid {
 		u8 Height;

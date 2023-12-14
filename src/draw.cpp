@@ -10,7 +10,6 @@ namespace game {
 	vec2 getClipPos(Grid* grid, u8 i, u8 j) {
 		f32 y = static_cast<float>(i) / grid->Height;
 		f32 x = static_cast<float>(j) / grid->Width;
-
 		return { x, y };
 	}
 
@@ -22,7 +21,7 @@ namespace game {
 		} else if (dir == -Y_AXIS) {
 			return vec2(0.0f, 0.75f);
 		} else {
-			return vec2(0.0f, 0.55f);
+			return vec2(0.0f, 0.50f);
 		}
 	}
 
@@ -44,7 +43,9 @@ namespace game {
 				} else if (holds_alternative<Chu>(*ref)) {
 					Chu chu = get<Chu>(*ref);
 					vec2 texOffset  = texOffsetFromDir(chu.Dir);
-					Draw(ChuDrawInfo, getClipPos(grid, row, col), cellScale * 0.8f, texOffset);
+					Draw(ChuDrawInfo, getClipPos(grid, row, col), cellScale, texOffset);
+				} else if (holds_alternative<NextLevelPortal>(*ref)) {
+					Draw(NextLevelPortalDrawInfo, getClipPos(grid, row, col), cellScale);
 				}
 			}
 		}

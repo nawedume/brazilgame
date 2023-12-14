@@ -1,3 +1,4 @@
+#include "world.hpp"
 #include <OpenGL/OpenGL.h>
 #include <core.hpp>
 #include <render.hpp>
@@ -23,6 +24,7 @@ namespace game {
 	DrawInfo ChuDrawInfo;
 	DrawInfo TreeDrawInfo;
 	DrawInfo GrassDrawInfo;
+	DrawInfo NextLevelPortalDrawInfo;
 	Camera* camera;
 
 	GLuint GenerateTexture(string const& filePath) {
@@ -69,6 +71,9 @@ namespace game {
 		ChuDrawInfo.TextureRef = GenerateTexture("./assets/Chu.png");
 
 		GrassDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 0.4, 1.0, 0.6 });
+
+		NextLevelPortalDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 1.0, 1.0, 1.0 });
+		NextLevelPortalDrawInfo.TextureRef = GenerateTexture("./assets/Portal.png");
 	}
 
 	void CreateVao(RenderState* state, bool isStatic) {
