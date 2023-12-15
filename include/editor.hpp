@@ -19,7 +19,7 @@ namespace game {
 
 
 	struct EditorContext {
-		Grid* grid;
+		Level* level;
 		EntId entId = SCENERY;
 		u8 chuFunc;
 		EState state;

@@ -68,9 +68,13 @@ namespace game {
 			}
 			vec2 mousePos;
 			if (isLeftMouseClicked(&mousePos)) {
-				ivec2 coord = getCoordFromScreenPos(mousePos, context.grid->Height, context.grid->Width);
+				ivec2 coord = getCoordFromScreenPos(mousePos, context.level->grid.Height, context.level->grid.Width);
 				CellRef ref = createRefDefault(context.entId);
-				context.grid->set(coord.y, coord.x, ref);
+				context.level->grid.set(coord.y, coord.x, ref);
+
+				if (context.entId == EntId::PLAYER) {
+					context.level->playerPos = coord;
+				}
 			}
 		}
 	}
@@ -85,13 +89,10 @@ namespace game {
 		};
 		level.step = 0;
 		level.flags = {};
-		level.player = { .Dir = X_AXIS };
 		level.playerPos = { 0, 0 };
-
 
 		string line;
 		ifstream file(path);
-
 		if (file.fail()) {
 			fprintf(stderr, "Could not read Level\n");
 			exit(1);
@@ -115,8 +116,9 @@ namespace game {
 					case PLAYER: 
 						{
 							Player player {};
-							player.Dir = -X_AXIS;
+							player.Dir = X_AXIS;
 							level.grid.set(yi, xi, player);
+							level.playerPos = { xi, yi };
 							break;
 						}
 					case CHU:

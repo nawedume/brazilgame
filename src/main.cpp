@@ -29,7 +29,7 @@ int main() {
 	f32 PreviousTime = 0.0f;
 	bool isEditor = false;
 	game::EditorContext editorContext {};
-	editorContext.grid = &currentLevel.grid;
+	editorContext.level = &currentLevel;
 	editorContext.entId = static_cast<game::EntId>(0);
 	editorContext.state = game::EState::PLACING;
 	editorContext.chuFunc = 0;
@@ -69,7 +69,7 @@ int main() {
 			game::next(currentLevel);
 		}
 
-		editorContext.grid = &currentLevel.grid;
+		editorContext.level = &currentLevel;
 		game::DrawGrid(&currentLevel.grid);
 
 		game::swapBuffers();

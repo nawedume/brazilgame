@@ -12,7 +12,6 @@ namespace game {
 
 	struct Level {
 		Grid grid;
-		Player player;
 		ivec2 playerPos;
 		u32 step;
 		Flags flags { 0 };

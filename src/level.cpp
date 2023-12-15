@@ -53,12 +53,12 @@ namespace game {
 	Level createLevel1() {
 		Level level {
 			.grid = Grid(10, 10),
-			.player = { .Dir = X_AXIS },
 			.playerPos = { 4, 6 },
 			.step = 0,
 		};
 
-		level.grid.set(level.playerPos.y, level.playerPos.x, level.player);
+		Player player { .Dir = X_AXIS };
+		level.grid.set(level.playerPos.y, level.playerPos.x, player);
 
 		game::Scenery scenery = { };
 		level.grid.set(0, 3, scenery);
@@ -84,12 +84,12 @@ namespace game {
 	Level createLevel2() {
 		Level level {
 			.grid = Grid(10, 10),
-			.player = { .Dir = X_AXIS },
 			.playerPos = { 4, 4 },
 			.step = 0,
 		};
 
-		level.grid.set(level.playerPos.y, level.playerPos.x, level.player);
+		Player player { .Dir = X_AXIS };
+		level.grid.set(level.playerPos.y, level.playerPos.x, player);
 
 		game::Scenery scenery = { };
 		level.grid.fillCol(0, scenery);
@@ -135,12 +135,12 @@ namespace game {
 	Level createLevel3() {
 		Level level = {
 			.grid = Grid (10, 10),
-			.player = { .Dir = X_AXIS },
 			.playerPos = { 4, 4 },
 			.step = 0
 		};
 
-		level.grid.set(level.playerPos.y, level.playerPos.x, level.player);
+		Player player = { .Dir = X_AXIS };
+		level.grid.set(level.playerPos.y, level.playerPos.x, player);
 		game::Scenery scenery = { };
 		level.grid.fillRow(0, scenery);
 		level.grid.fillRow(1, scenery);
@@ -161,7 +161,7 @@ namespace game {
 
 	}
 
-	void next(Level& level) {
+	void processStep(Level& level) {
 		ivec2 newPlayerPos = getPositionFromEvent(level.playerPos);
 		if (newPlayerPos != level.playerPos && isValidMove(newPlayerPos, &level.grid)) {
 			CellRef* previousCellRef = level.grid.get(newPlayerPos.y, newPlayerPos.x);
@@ -170,8 +170,17 @@ namespace game {
 				return;
 			}
 
+			printf("Heya\n");
+			CellRef* ref = level.grid.get(level.playerPos.y, level.playerPos.x);
+
+			printf("%d, %d\n", level.playerPos.y, level.playerPos.x);
+			printf("%d, %d\n", newPlayerPos.y, newPlayerPos.x);
+			printf("%lu\n", ref->index());
+			Player player = get<Player>(*level.grid.get(level.playerPos.y, level.playerPos.x));
+			printf("Heya2\n");
+			player.Dir = newPlayerPos - level.playerPos;
 			level.grid.remove(level.playerPos.y, level.playerPos.x);
-			level.grid.set(newPlayerPos.y, newPlayerPos.x, level.player);
+			level.grid.set(newPlayerPos.y, newPlayerPos.x, player);
 			level.playerPos = newPlayerPos;
 			level.step += 1;
 
@@ -197,5 +206,9 @@ namespace game {
 			case 3: return createLevel3();
 			default: throw std::runtime_error("No level found\n");
 		}
+	}
+
+	void next(Level& level) {
+		processStep(level);
 	}
 }
