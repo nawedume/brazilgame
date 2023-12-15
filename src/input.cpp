@@ -14,6 +14,7 @@ namespace game {
 	const u32 KEY_S = GLFW_KEY_S;
 	const u32 KEY_D = GLFW_KEY_D;
 	const u32 KEY_R = GLFW_KEY_R;
+	const u32 KEY_O = GLFW_KEY_O;
 	const u32 KEY_SPACE = GLFW_KEY_SPACE;
 	const u32 KEY_P = GLFW_KEY_P;
 	const u32 KEY_LEFT_SHIFT = GLFW_KEY_LEFT_SHIFT;
@@ -70,7 +71,6 @@ namespace game {
 		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
 			f64 x, y;
 			glfwGetCursorPos(window, &x, &y);
-			printf(">>> %f,%f\n", x, y);
 			pos->x = x;
 			pos->y = y;
 			return true;

@@ -13,6 +13,7 @@
 #include <world.hpp>
 #include <level.hpp>
 #include <editor.hpp>
+#include <variant>
 
 using namespace glm;
 using namespace std;
@@ -23,13 +24,14 @@ int main() {
 	game::InitRenderState();
 
 	u32 levelIdx = 0;
-	game::Level ml = game::ReadLevel("./levels/1.lvl");
-	game::Level currentLevel = game::createLevel(2);;
+	string const& levelName = "./levels/1.lvl";
+	game::Level* currentLevel = game::ReadLevel(levelName);
+	//game::Level currentLevel = game::createLevel(2);;
 
 	f32 PreviousTime = 0.0f;
 	bool isEditor = false;
 	game::EditorContext editorContext {};
-	editorContext.level = &currentLevel;
+	editorContext.level = currentLevel;
 	editorContext.entId = static_cast<game::EntId>(0);
 	editorContext.state = game::EState::PLACING;
 	editorContext.chuFunc = 0;
@@ -47,30 +49,39 @@ int main() {
 
 		if (game::isKeyClicked(game::KEY_R)) {
 			if (isEditor) {
-				currentLevel = game::createLevel(0);
+				currentLevel = game::ReadLevel(levelName);
 			} else {
-				currentLevel = game::createLevel(levelIdx);
+				currentLevel = game::ReadLevel(levelName);
 			}
 		}
 
 		if (game::isKeyClicked(game::KEY_E)) {
 			isEditor = !isEditor;
-			printf("Editor mode: %b\n", isEditor);
+			printf("Editor mode: %d\n", isEditor);
 		}
 
-		if (currentLevel.flags.completed) {
-			levelIdx += 1;
-			currentLevel = game::createLevel(levelIdx);
+		if (currentLevel->flags.completed) {
+			//levelIdx += 1;
+			//currentLevel = game::createLevel(levelIdx);
 		}
 
 		if (isEditor) {
 			game::EditorController(editorContext);
+			if (editorContext.level != currentLevel) {
+				currentLevel = editorContext.level;
+			}
 		} else {
-			game::next(currentLevel);
+			game::next(*currentLevel);
 		}
 
-		editorContext.level = &currentLevel;
-		game::DrawGrid(&currentLevel.grid);
+		if (!std::holds_alternative<game::Player>(*currentLevel->grid.get(currentLevel->playerPos.y, currentLevel->playerPos.x))) {
+			// player has died
+			printf("Player has died\n");
+			currentLevel = game::ReadLevel(levelName);
+		}
+
+		editorContext.level = currentLevel;
+		game::DrawGrid(&currentLevel->grid);
 
 		game::swapBuffers();
 		game::windowSystemPollEvents();

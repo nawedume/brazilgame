@@ -7,7 +7,6 @@
 #include <ai.hpp>
 
 namespace game {
-
 	bool isWalkable(CellRef* ref) {
 		return holds_alternative<Grass>(*ref) || holds_alternative<NextLevelPortal>(*ref);
 	}
@@ -170,14 +169,7 @@ namespace game {
 				return;
 			}
 
-			printf("Heya\n");
-			CellRef* ref = level.grid.get(level.playerPos.y, level.playerPos.x);
-
-			printf("%d, %d\n", level.playerPos.y, level.playerPos.x);
-			printf("%d, %d\n", newPlayerPos.y, newPlayerPos.x);
-			printf("%lu\n", ref->index());
 			Player player = get<Player>(*level.grid.get(level.playerPos.y, level.playerPos.x));
-			printf("Heya2\n");
 			player.Dir = newPlayerPos - level.playerPos;
 			level.grid.remove(level.playerPos.y, level.playerPos.x);
 			level.grid.set(newPlayerPos.y, newPlayerPos.x, player);

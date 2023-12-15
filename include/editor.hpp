@@ -6,7 +6,9 @@
 namespace game {
 	enum EState {
 		PLACING,
-		ASSIGN_FUNC
+		ASSIGN_FUNC,
+		WRITING,
+		OPEN
 	};
 
 	enum EntId {
@@ -17,7 +19,6 @@ namespace game {
 		GRASS
 	};
 
-
 	struct EditorContext {
 		Level* level;
 		EntId entId = SCENERY;
@@ -26,6 +27,6 @@ namespace game {
 	};
 
 	void EditorController(EditorContext& context);
-		
-	Level ReadLevel(string const& path); 
+
+	Level* ReadLevel(string const& path); 
 };

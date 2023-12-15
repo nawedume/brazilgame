@@ -2,6 +2,7 @@
 
 #include <core.hpp>
 #include <world.hpp>
+#include <string>
 
 namespace game {
 	using namespace std;
