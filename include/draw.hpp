@@ -1,4 +1,4 @@
-#pragma
+#pragma once
 
 #include <core.hpp>
 #include <world.hpp>

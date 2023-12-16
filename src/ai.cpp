@@ -1,12 +1,11 @@
 #include <ai.hpp>
-#include <variant>
 #include <level.hpp>
 
 namespace game {
 
 	bool hasBlock(ivec2 position, game::Grid* grid) {
-		CellRef ref = *(grid->get(position.y, position.x));
-		return !holds_alternative<Grass>(ref);
+		CellRef* ref = grid->get(position.y, position.x);
+		return ref->type != GRASS;
 	}
 
 	bool isInBounds(ivec2 position, game::Grid* grid) {
@@ -14,14 +13,14 @@ namespace game {
 			&& position.y >= 0 && position.y < grid->Height; }
 
 	bool hasKillable(ivec2 position, Grid* grid) {
-		CellRef ref = *(grid->get(position.y, position.x));
-		return holds_alternative<Player>(ref);
+		CellRef* ref = grid->get(position.y, position.x);
+		return ref->type == Type::PLAYER;
 	}
 
 	void CommonRotate(ivec2 const axis[4], ivec2 pos, Grid* grid, u32 step) {
 		CellRef* ref = (grid->get(pos.y, pos.x));
-		if (holds_alternative<Chu>(*ref)) {
-			Chu* chu = &(get<Chu>(*ref));
+		if (ref->type == Type::CHU) {
+			Chu* chu = &ref->chu;
 			for (int i = 0; i < 4; i++) {
 				if (axis[i] == chu->Dir) {
 					chu->Dir = axis[(i + 1) % 4];
@@ -34,18 +33,17 @@ namespace game {
 	}
 
 	ivec2 CommonAttack(ivec2 pos, Grid* grid, u32 step) {
-		CellRef ref = *(grid->get(pos.y, pos.x));
+		CellRef* ref = grid->get(pos.y, pos.x);
 
-		if (holds_alternative<Chu>(ref)) {
-			Chu chu = get<Chu>(ref);
-
+		if (ref->type == Type::CHU) {
+			Chu chu = ref->chu;
 			vec2 curCell = pos + chu.Dir;
 			while (isInBounds(curCell, grid)) {
 
 				if (hasKillable(curCell, grid)) {
-					grid->remove(pos.y, pos.x);
 					ivec2 newPos = pos + chu.Dir;
-					grid->set(newPos.y, newPos.x, chu);
+					grid->set(newPos.y, newPos.x, *ref);
+					grid->remove(pos.y, pos.x);
 					return newPos;
 				} else if (hasBlock(curCell, grid)) {
 						return pos;
@@ -73,13 +71,14 @@ namespace game {
 	}
 
 	void AttackOrRotate(ivec2 pos, Grid* grid, u32 step) {
+		Chu chu = grid->get(pos.y, pos.x)->chu;
 		ivec2 newPos = game::CommonAttack(pos, grid, step);
 		if (pos == newPos) {
-			Chu& ref = get<Chu>(*grid->get(pos.y, pos.x));
+			Chu& ref = grid->get(pos.y, pos.x)->chu;
 			ivec2 newDir = rotateAxis(ref.Dir);
 			while (newDir != ref.Dir) {
 				ivec2 neighbourPos = pos + newDir;
-				if (!holds_alternative<Scenery>(*grid->get(neighbourPos.y, neighbourPos.x))) {
+				if (grid->get(neighbourPos.y, neighbourPos.x)->type != Type::SCENERY) {
 					ref.Dir = newDir;
 					return;
 				}

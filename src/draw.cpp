@@ -1,7 +1,6 @@
 #include <core.hpp>
 #include <render.hpp>
 #include <world.hpp>
-#include <variant>
 #include <glad/glad.h>
 
 namespace game {
@@ -36,17 +35,39 @@ namespace game {
 		for (u32 row = 0; row < grid->Height; row++) {
 			for (u32 col = 0; col < grid->Width; col++) {
 				CellRef* ref = grid->get(row, col);
-				if (holds_alternative<Player>(*ref)) {
-					Draw(PlayerDrawInfo, getClipPos(grid, row, col), cellScale);
-				} else if (holds_alternative<Scenery>(*ref)) {
-					Draw(TreeDrawInfo, getClipPos(grid, row, col), cellScale);
-				} else if (holds_alternative<Chu>(*ref)) {
-					Chu chu = get<Chu>(*ref);
-					vec2 texOffset  = texOffsetFromDir(chu.Dir);
-					Draw(ChuDrawInfo, getClipPos(grid, row, col), cellScale, texOffset);
-				} else if (holds_alternative<NextLevelPortal>(*ref)) {
-					Draw(NextLevelPortalDrawInfo, getClipPos(grid, row, col), cellScale);
-				}
+				switch (ref->type) {
+					case Type::PLAYER:
+						{
+							Draw(PlayerDrawInfo, getClipPos(grid, row, col), cellScale);
+							break;
+						}
+					case Type::CHU:
+						{
+							vec2 texOffset  = texOffsetFromDir(ref->chu.Dir);
+							Draw(ChuDrawInfo, getClipPos(grid, row, col), cellScale, texOffset);
+							break;
+						}
+					case Type::SCENERY:
+						{
+							Draw(TreeDrawInfo, getClipPos(grid, row, col), cellScale);
+							break;
+						}
+					case Type::NEXTLEVELPORTAL:
+						{
+							Draw(NextLevelPortalDrawInfo, getClipPos(grid, row, col), cellScale);
+							break;
+						}
+					case Type::GOAT:
+						{
+							Draw(GoatDrawInfo, getClipPos(grid, row, col), cellScale);
+							break;
+						}
+
+					case Type::GRASS:
+						{
+							break;
+						}
+				};
 			}
 		}
 	}

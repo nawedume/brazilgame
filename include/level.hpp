@@ -13,10 +13,11 @@ namespace game {
 
 	struct Level {
 		Grid grid;
-		ivec2 playerPos;
 		u32 step;
+		ivec2 playerPos;
 		Flags flags { 0 };
 		string levelName;
+		vector<ivec2> sheepPos;
 	};
 
 	extern Level createLevel(u32 levelIdx);

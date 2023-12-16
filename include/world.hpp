@@ -2,7 +2,6 @@
 
 #include <core.hpp>
 #include <glm/glm.hpp>
-#include <variant>
 
 namespace game {
 	struct Grid; // forward declearation
@@ -11,7 +10,18 @@ namespace game {
 	struct Scenery;
 	struct Grass;
 	struct NextLevelPortal;
-	typedef std::variant<Player, Chu, Scenery, NextLevelPortal, Grass> CellRef;
+	struct Goat;
+
+	//typedef std::variant<Player, Chu, Scenery, NextLevelPortal, Goat, Grass> CellRef;
+
+	enum Type {
+		PLAYER,
+		CHU,
+		SCENERY,
+		NEXTLEVELPORTAL,
+		GOAT,
+		GRASS
+	};
 
 	struct Player {
 		ivec2 Dir;
@@ -39,6 +49,81 @@ namespace game {
 	struct NextLevelPortal {
 	};
 
+	struct Goat {
+	};
+
+	struct CellRef {
+		Type type;
+
+		union {
+			Player player;
+			Chu chu;
+			Scenery scenery;
+			NextLevelPortal nlPortal;
+			Goat goat;
+			Grass grass;
+		};
+
+		CellRef() {
+			this->type = Type::GRASS;
+			grass = {};
+		}
+
+		CellRef(Type type, Player player) {
+			this->type = Type::PLAYER;
+			this->player = player;
+		}
+
+		CellRef(Type type, Chu chu) {
+			this->type = Type::CHU;
+			this->chu = chu;
+		}
+
+		CellRef(Type type, Scenery scenery) {
+			this->type = Type::SCENERY;
+			this->scenery = scenery;
+		}
+
+		CellRef(Type type, NextLevelPortal nlPortal) {
+			this->type = Type::NEXTLEVELPORTAL;
+			this->nlPortal = nlPortal;
+		}
+
+		CellRef(Type type, Goat goat) {
+			this->type = Type::GOAT;
+			this->goat = goat;
+		}
+
+		CellRef(Type type, Grass grass) {
+			this->type = Type::GRASS;
+			this->grass = grass;
+		}
+
+		CellRef(const CellRef& other) {
+			type = other.type;
+			switch(other.type) {
+				case PLAYER: 
+					player = other.player;
+					break;
+				case CHU:
+					chu = other.chu;
+					break;
+				case SCENERY:
+					scenery = other.scenery;
+					break;
+				case NEXTLEVELPORTAL:
+					nlPortal = other.nlPortal;
+					break;
+				case GOAT:
+					goat = other.goat;
+					break;
+				case GRASS:
+					grass = other.grass;
+					break;
+			}
+		}
+	};
+
 	struct Cell {
 		ivec2 Pos;
 		CellRef ref;
@@ -58,7 +143,8 @@ namespace game {
 		}
 
 		void remove(u8 row, u8 col) {
-			Data[(row * Width) + col] = (Grass) { };
+			CellRef ref = CellRef();
+			Data[(row * Width) + col] = ref;
 		}
 
 		Grid(u8 height, u8 width) {
@@ -66,8 +152,7 @@ namespace game {
 			Width = width;
 			Data.resize(Height * Width);
 
-			Grass scenery = { };
-			CellRef ref = scenery;
+			CellRef ref = CellRef();
 			for (int i = 0; i < Width * Height; i++) {
 				Data[i] = ref;
 			}

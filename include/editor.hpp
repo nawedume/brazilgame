@@ -13,7 +13,7 @@ namespace game {
 
 	struct EditorContext {
 		Level* level;
-		u8 entId = 2;
+		Type entId = Type::SCENERY;
 		u8 chuFunc;
 		EState state;
 	};

@@ -4,7 +4,6 @@
 #include <level.hpp>
 #include <string>
 #include <fstream>
-#include <variant>
 #include <world.hpp>
 #include <ai.hpp>
 #include <input.hpp>
@@ -18,33 +17,33 @@ namespace game {
 		AttackSW,
 	};
 
-	CellRef createRefDefault(u32 entId) {
+	CellRef createRefDefault(Type type) {
 
-		switch (entId) {
-			case 0: // player
+		switch (type) {
+			case Type::PLAYER: // player
 				{
-					return Player { .Dir = X_AXIS };
+					return CellRef(type, Player { .Dir = X_AXIS });
 				}
-			case 1: // chu
+			case Type::CHU: // chu
 				{
-					return Chu { .Dir = X_AXIS, .Func = ChuFuncs[0] };
+					return CellRef(type, Chu { .Dir = X_AXIS, .Func = ChuFuncs[0] });
 				}
-			case 2: // scenery
+			case Type::SCENERY: // scenery
 				{
-					return Scenery { .Type = TREE };
+					return CellRef(type, Scenery { .Type = TREE });
 				}
 			case 3: // portal
 				{
-					return NextLevelPortal { };
+					return CellRef(type, NextLevelPortal { });
 				}
 			case 4: // grass
 				{
-					return Grass { };
+					return CellRef(type, Grass { });
 				}
 			default:
 				{
 					fprintf(stderr, "No entity found with that ID\n");
-					return Grass();
+					return CellRef(Type::GRASS, Grass { });
 				}
 		}
 
@@ -70,34 +69,20 @@ namespace game {
 	}
 
 	void WriteLineEnt(CellRef* ref, ivec2 pos, char* buffer, u32& idx) {
-		if (holds_alternative<Grass>(*ref)) {
+		if (ref->type == Type::GRASS) {
 			return;
 		}
 
 		writeNum(pos.x, buffer, idx);
 		writeNum(pos.y, buffer, idx);
-		writeNum(ref->index(), buffer, idx);
-		switch (ref->index()) {
-			case 0: 
+		writeNum(ref->type, buffer, idx);
+		switch (ref->type) {
+			case Type::CHU:
 				{
-					Player player = get<Player>(*ref);
-					break;
-				}
-			case 1:
-				{
-					Chu chu = get<Chu>(*ref);
-			printf(">> %d, %d\n", chu.Dir.x, chu.Dir.y);
+					Chu chu = ref->chu;
 					writeNum(chu.Dir.x, buffer, idx);
 					writeNum(chu.Dir.y, buffer, idx);
 					writeNum(0, buffer, idx);
-					break;
-				}
-			case 2: // Tree
-				{
-					break;
-				}
-			case 3: // Portal
-				{
 					break;
 				}
 			default:
@@ -108,6 +93,7 @@ namespace game {
 
 	void EditorController(EditorContext& context) {
 		if (isKeyPressed(KEY_P)) {
+			printf("place mode\n");
 			context.state = EState::PLACING;
 		} else if (isKeyPressed(KEY_A)) {
 			context.state = EState::ASSIGN_FUNC;
@@ -122,7 +108,7 @@ namespace game {
 		if (context.state == EState::PLACING) {
 			s8 selection = getNumericKeyPressed();
 			if (selection >= 0) {
-				context.entId = selection;
+				context.entId = static_cast<Type>(selection);
 			}
 			vec2 mousePos;
 			if (isLeftMouseClicked(&mousePos)) {
@@ -136,8 +122,8 @@ namespace game {
 			} else if (isRightMouseClicked(&mousePos)) {
 				ivec2 coord = getCoordFromScreenPos(mousePos, context.level->grid.Height, context.level->grid.Width);
 				CellRef* ref = context.level->grid.get(coord.y, coord.x);
-				if (holds_alternative<Chu>(*ref)) {
-					Chu& chu = get<Chu>(*ref);
+				if (ref->type == Type::CHU) {
+					Chu& chu = ref->chu;
 					chu.Dir = { -chu.Dir.y, chu.Dir.x };
 				}
 			}
@@ -203,7 +189,7 @@ namespace game {
 		if (file.fail()) {
 			fprintf(stderr, "Could not read Level\n");
 				Player player {};
-				level->grid.set(0, 0, player);
+				level->grid.set(0, 0, CellRef(Type::PLAYER, player));
 			return level;
 		}
 
@@ -222,34 +208,34 @@ namespace game {
 
 				u8 type = stoi(strtok(nullptr, ";"));
 				switch (type) {
-					case 0: // player 
+					case Type::PLAYER: // player 
 						{
 							Player player {};
 							player.Dir = X_AXIS;
-							level->grid.set(yi, xi, player);
+							level->grid.set(yi, xi, CellRef(Type::PLAYER, player));
 							level->playerPos = { xi, yi };
 							break;
 						}
-					case 1: // chu
+					case Type::CHU: // chu
 						{
 							Chu chu {};
 							s8 dxi = stoi(strtok(nullptr, ";"));
 							s8 dyi = stoi(strtok(nullptr, ";"));
 							chu.Dir = { dxi, dyi };
 							chu.Func = ChuFuncs[stoi(strtok(nullptr, ";"))];
-							level->grid.set(yi, xi, chu);
+							level->grid.set(yi, xi, CellRef(Type::CHU, chu));
 							break;
 						}
-					case 2: // scenery
+					case Type::SCENERY: // scenery
 						{
 							Scenery scenery { .Type = ScenearyType::TREE };
-							level->grid.set(yi, xi, scenery);
+							level->grid.set(yi, xi, CellRef(Type::SCENERY, scenery));
 							break;
 						}
-					case 3: // portal 
+					case Type::NEXTLEVELPORTAL: // portal 
 						{
 							NextLevelPortal portal { };
-							level->grid.set(yi, xi, portal);
+							level->grid.set(yi, xi, CellRef(Type::NEXTLEVELPORTAL, portal));
 							break;
 						}
 					default:
