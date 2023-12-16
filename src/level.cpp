@@ -88,7 +88,6 @@ namespace game {
 			level.flags.defeated = level.grid.get(level.playerPos.y, level.playerPos.x)->type != Type::PLAYER;
 			if (!level.flags.defeated) {
 				for (ivec2& gpos : level.goatPos) {
-					printf("G Type %d\n", level.grid.get(gpos)->type);
 					if (level.grid.get(gpos)->type != Type::GOAT) {
 						level.flags.defeated = true;
 						break;

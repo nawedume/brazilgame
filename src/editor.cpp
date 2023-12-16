@@ -110,6 +110,10 @@ namespace game {
 		context.level->grid.remove(pos);
 	}
 
+	void sortByDist(vector<ivec2>& pos, ivec2 pp) {
+		std::sort(pos.begin(), pos.end(), [pp](ivec2 const& lhs, ivec2 const& rhs){ return dist(lhs, pp) < dist(rhs, pp); });
+	}
+
 	void EditorController(EditorContext& context) {
 		if (isKeyPressed(KEY_P)) {
 			printf("place mode\n");
@@ -141,12 +145,11 @@ namespace game {
 				if (context.entId == Type::PLAYER) {
 					context.level->playerPos = coord;
 					ivec2 pp = context.level->playerPos;
-					std::sort(context.level->goatPos.begin(), context.level->goatPos.end(), [pp](ivec2 const& lhs, ivec2 const& rhs){ return dist(lhs, pp) < dist(rhs, pp); });
+					sortByDist(context.level->goatPos, pp);
 				} else if (context.entId == Type::GOAT) {
-					printf("num of goats %lu\n", context.level->goatPos.size());
 					context.level->goatPos.push_back(coord);
 					ivec2 pp = context.level->playerPos;
-					std::sort(context.level->goatPos.begin(), context.level->goatPos.end(), [pp](ivec2 const& lhs, ivec2 const& rhs){ return dist(lhs, pp) < dist(rhs, pp); });
+					sortByDist(context.level->goatPos, pp);
 				}
 
 			} else if (isRightMouseClicked(&mousePos)) {
@@ -268,9 +271,17 @@ namespace game {
 							level->grid.set(yi, xi, CellRef(Type::NEXTLEVELPORTAL, portal));
 							break;
 						}
-					default:
-						break;
+					case Type::GOAT:
+						{
+							Goat goat {};
+							level->goatPos.push_back({xi, yi });
+							level->grid.set(yi, xi, CellRef(Type::GOAT, goat));
+						}
+					case Type::GRASS:
+						{
+						}
 				}
+				sortByDist(level->goatPos, level->playerPos);
 			}
 		}
 
