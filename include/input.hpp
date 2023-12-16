@@ -36,6 +36,8 @@ namespace game {
 
 	extern bool isLeftMouseClicked(vec2* pos);
 
+	extern bool isRightMouseClicked(vec2* pos);
+
 	extern void tick();
 }
 

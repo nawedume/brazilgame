@@ -11,17 +11,9 @@ namespace game {
 		OPEN
 	};
 
-	enum EntId {
-		PLAYER,
-		CHU,
-		SCENERY,
-		NEXTLEVELPORTAL,
-		GRASS
-	};
-
 	struct EditorContext {
 		Level* level;
-		EntId entId = SCENERY;
+		u8 entId = 2;
 		u8 chuFunc;
 		EState state;
 	};

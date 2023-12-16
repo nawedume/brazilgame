@@ -16,6 +16,7 @@ namespace game {
 		ivec2 playerPos;
 		u32 step;
 		Flags flags { 0 };
+		string levelName;
 	};
 
 	extern Level createLevel(u32 levelIdx);

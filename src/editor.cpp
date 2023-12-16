@@ -18,26 +18,26 @@ namespace game {
 		AttackSW,
 	};
 
-	CellRef createRefDefault(EntId entId) {
+	CellRef createRefDefault(u32 entId) {
 
 		switch (entId) {
-			case PLAYER:
+			case 0: // player
 				{
 					return Player { .Dir = X_AXIS };
 				}
-			case CHU:
+			case 1: // chu
 				{
 					return Chu { .Dir = X_AXIS, .Func = ChuFuncs[0] };
 				}
-			case SCENERY:
+			case 2: // scenery
 				{
 					return Scenery { .Type = TREE };
 				}
-			case NEXTLEVELPORTAL:
+			case 3: // portal
 				{
 					return NextLevelPortal { };
 				}
-			case GRASS:
+			case 4: // grass
 				{
 					return Grass { };
 				}
@@ -96,7 +96,7 @@ namespace game {
 				{
 					break;
 				}
-			case 4: // Portal
+			case 3: // Portal
 				{
 					break;
 				}
@@ -122,7 +122,7 @@ namespace game {
 		if (context.state == EState::PLACING) {
 			s8 selection = getNumericKeyPressed();
 			if (selection >= 0) {
-				context.entId = static_cast<EntId>(selection);
+				context.entId = selection;
 			}
 			vec2 mousePos;
 			if (isLeftMouseClicked(&mousePos)) {
@@ -130,14 +130,21 @@ namespace game {
 				CellRef ref = createRefDefault(context.entId);
 				context.level->grid.set(coord.y, coord.x, ref);
 
-				if (context.entId == EntId::PLAYER) {
+				if (context.entId == 0) {
 					context.level->playerPos = coord;
+				}
+			} else if (isRightMouseClicked(&mousePos)) {
+				ivec2 coord = getCoordFromScreenPos(mousePos, context.level->grid.Height, context.level->grid.Width);
+				CellRef* ref = context.level->grid.get(coord.y, coord.x);
+				if (holds_alternative<Chu>(*ref)) {
+					Chu& chu = get<Chu>(*ref);
+					chu.Dir = { -chu.Dir.y, chu.Dir.x };
 				}
 			}
 		}
 
 		if (context.state == EState::WRITING) {
-			char name[100] {'a', '.', 'l', 'v', 'l', '\0'};
+			char name[100] = "a.lvl";
 			s8 inp = getNumericKeyPressed();
 			if (inp == -1) {
 				return;
@@ -176,23 +183,28 @@ namespace game {
 				delete context.level;
 			}
 			context.level = ReadLevel(fileName.c_str());
+			context.state = EState::PLACING;
 
 		}
 	}
 
 	Level* ReadLevel(string const& path) {
+		printf("Reading %s\n", path.c_str());
 		Level* level = new Level{
 			.grid = { 10, 10 }
 		};
 		level->step = 0;
 		level->flags = {};
 		level->playerPos = { 0, 0 };
+		level->levelName = path;
 
 		string line;
 		ifstream file(path);
 		if (file.fail()) {
 			fprintf(stderr, "Could not read Level\n");
-			exit(1);
+				Player player {};
+				level->grid.set(0, 0, player);
+			return level;
 		}
 
 		while (getline(file, line)) {
@@ -210,7 +222,7 @@ namespace game {
 
 				u8 type = stoi(strtok(nullptr, ";"));
 				switch (type) {
-					case PLAYER: 
+					case 0: // player 
 						{
 							Player player {};
 							player.Dir = X_AXIS;
@@ -218,7 +230,7 @@ namespace game {
 							level->playerPos = { xi, yi };
 							break;
 						}
-					case CHU:
+					case 1: // chu
 						{
 							Chu chu {};
 							s8 dxi = stoi(strtok(nullptr, ";"));
@@ -228,13 +240,13 @@ namespace game {
 							level->grid.set(yi, xi, chu);
 							break;
 						}
-					case SCENERY:
+					case 2: // scenery
 						{
 							Scenery scenery { .Type = ScenearyType::TREE };
 							level->grid.set(yi, xi, scenery);
 							break;
 						}
-					case NEXTLEVELPORTAL:
+					case 3: // portal 
 						{
 							NextLevelPortal portal { };
 							level->grid.set(yi, xi, portal);

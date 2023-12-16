@@ -163,6 +163,7 @@ namespace game {
 	void processStep(Level& level) {
 		ivec2 newPlayerPos = getPositionFromEvent(level.playerPos);
 		if (newPlayerPos != level.playerPos && isValidMove(newPlayerPos, &level.grid)) {
+			CellRef* o = level.grid.get(6, 9);
 			CellRef* previousCellRef = level.grid.get(newPlayerPos.y, newPlayerPos.x);
 			if (holds_alternative<NextLevelPortal>(*previousCellRef)) {
 				level.flags.completed = true;

@@ -79,6 +79,18 @@ namespace game {
 		return false;
 	}
 
+	bool isRightMouseClicked(vec2* pos) {
+		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
+			f64 x, y;
+			glfwGetCursorPos(window, &x, &y);
+			pos->x = x;
+			pos->y = y;
+			return true;
+		}
+
+		return false;
+	}
+
 	void tick() {
 		currentFrame += 1;
 		updateMouseMovement();

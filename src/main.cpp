@@ -18,21 +18,26 @@
 using namespace glm;
 using namespace std;
 
+string levelToName(u8 lvl) {
+	char b[] = "levels/a.lvl";
+	b[7] = '0' + lvl;
+	return string(b);
+}
+
 int main() {
 	game::setupWindow();
 	game::setupGlad();
 	game::InitRenderState();
 
-	u32 levelIdx = 0;
-	string const& levelName = "./levels/1.lvl";
-	game::Level* currentLevel = game::ReadLevel(levelName);
+	u32 levelIdx = 1;
+	game::Level* currentLevel = game::ReadLevel(levelToName(levelIdx));
 	//game::Level currentLevel = game::createLevel(2);;
 
 	f32 PreviousTime = 0.0f;
 	bool isEditor = false;
 	game::EditorContext editorContext {};
 	editorContext.level = currentLevel;
-	editorContext.entId = static_cast<game::EntId>(0);
+	editorContext.entId = 2;
 	editorContext.state = game::EState::PLACING;
 	editorContext.chuFunc = 0;
 
@@ -49,9 +54,9 @@ int main() {
 
 		if (game::isKeyClicked(game::KEY_R)) {
 			if (isEditor) {
-				currentLevel = game::ReadLevel(levelName);
+				currentLevel = game::ReadLevel(currentLevel->levelName);
 			} else {
-				currentLevel = game::ReadLevel(levelName);
+				currentLevel = game::ReadLevel(currentLevel->levelName);
 			}
 		}
 
@@ -61,8 +66,8 @@ int main() {
 		}
 
 		if (currentLevel->flags.completed) {
-			//levelIdx += 1;
-			//currentLevel = game::createLevel(levelIdx);
+			levelIdx += 1;
+			currentLevel = game::ReadLevel(levelToName(levelIdx));
 		}
 
 		if (isEditor) {
@@ -77,7 +82,7 @@ int main() {
 		if (!std::holds_alternative<game::Player>(*currentLevel->grid.get(currentLevel->playerPos.y, currentLevel->playerPos.x))) {
 			// player has died
 			printf("Player has died\n");
-			currentLevel = game::ReadLevel(levelName);
+			currentLevel = game::ReadLevel(currentLevel->levelName);
 		}
 
 		editorContext.level = currentLevel;

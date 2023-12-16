@@ -11,7 +11,7 @@ namespace game {
 	struct Scenery;
 	struct Grass;
 	struct NextLevelPortal;
-	typedef std::variant<Player, Chu, Scenery, Grass, NextLevelPortal> CellRef;
+	typedef std::variant<Player, Chu, Scenery, NextLevelPortal, Grass> CellRef;
 
 	struct Player {
 		ivec2 Dir;
