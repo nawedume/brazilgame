@@ -9,6 +9,7 @@ namespace game {
 
 	struct Flags {
 		u8 completed : 1;
+		u8 defeated: 1;
 	};
 
 	struct Level {
@@ -17,7 +18,7 @@ namespace game {
 		ivec2 playerPos;
 		Flags flags { 0 };
 		string levelName;
-		vector<ivec2> sheepPos;
+		vector<ivec2> goatPos;
 	};
 
 	extern Level createLevel(u32 levelIdx);

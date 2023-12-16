@@ -138,6 +138,10 @@ namespace game {
 			return &Data[(row * Width) + col];
 		}
 
+		CellRef* get(ivec2 pos) {
+			return get(pos.y, pos.x);
+		}
+
 		void set(u8 row, u8 col, CellRef ref) {
 			Data[(row * Width) + col] = ref;
 		}
@@ -145,6 +149,16 @@ namespace game {
 		void remove(u8 row, u8 col) {
 			CellRef ref = CellRef();
 			Data[(row * Width) + col] = ref;
+		}
+
+		void remove(ivec2 pos) {
+			return remove(pos.y, pos.x);
+		}
+
+		void move(ivec2 src, ivec2 dst) {
+			CellRef ref = *get(src.y, src.x);
+			remove(src.y, src.x);
+			set(dst.y, dst.x, ref);
 		}
 
 		Grid(u8 height, u8 width) {

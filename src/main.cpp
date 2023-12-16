@@ -77,7 +77,7 @@ int main() {
 			game::next(*currentLevel);
 		}
 
-		if (currentLevel->grid.get(currentLevel->playerPos.y, currentLevel->playerPos.x)->type != game::Type::PLAYER) {
+		if (currentLevel->flags.defeated) {
 			// player has died
 			printf("Player has died\n");
 			currentLevel = game::ReadLevel(currentLevel->levelName);

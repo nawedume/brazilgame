@@ -32,18 +32,17 @@ namespace game {
 				{
 					return CellRef(type, Scenery { .Type = TREE });
 				}
-			case 3: // portal
+			case Type::NEXTLEVELPORTAL: // portal
 				{
 					return CellRef(type, NextLevelPortal { });
 				}
-			case 4: // grass
+			case Type::GRASS: // grass
 				{
 					return CellRef(type, Grass { });
 				}
-			default:
+			case Type::GOAT:
 				{
-					fprintf(stderr, "No entity found with that ID\n");
-					return CellRef(Type::GRASS, Grass { });
+					return CellRef(type, Goat { });
 				}
 		}
 
@@ -91,6 +90,26 @@ namespace game {
 		buffer[idx++] = '\n';
 	}
 
+	u32 dist(ivec2 const& a, ivec2 const& b) {
+		ivec2 v = abs(a - b);
+		return v.x + v.y;
+	}
+
+	void deleteFromGrid(EditorContext& context, ivec2 pos) {
+		CellRef* ref = context.level->grid.get(pos);
+		if (ref->type == Type::GOAT) {
+			vector<ivec2>& goatPositions = context.level->goatPos;
+			int i = 0;
+			for (; goatPositions[i] != pos && i < goatPositions.size(); i++);
+			if (i == goatPositions.size()) return;
+			for (; i + 1 < goatPositions.size(); i++) {
+				goatPositions[i] = goatPositions[i + 1];
+			}
+			goatPositions.pop_back();
+		}
+		context.level->grid.remove(pos);
+	}
+
 	void EditorController(EditorContext& context) {
 		if (isKeyPressed(KEY_P)) {
 			printf("place mode\n");
@@ -113,12 +132,23 @@ namespace game {
 			vec2 mousePos;
 			if (isLeftMouseClicked(&mousePos)) {
 				ivec2 coord = getCoordFromScreenPos(mousePos, context.level->grid.Height, context.level->grid.Width);
+
+				deleteFromGrid(context, coord);
+
 				CellRef ref = createRefDefault(context.entId);
 				context.level->grid.set(coord.y, coord.x, ref);
 
-				if (context.entId == 0) {
+				if (context.entId == Type::PLAYER) {
 					context.level->playerPos = coord;
+					ivec2 pp = context.level->playerPos;
+					std::sort(context.level->goatPos.begin(), context.level->goatPos.end(), [pp](ivec2 const& lhs, ivec2 const& rhs){ return dist(lhs, pp) < dist(rhs, pp); });
+				} else if (context.entId == Type::GOAT) {
+					printf("num of goats %lu\n", context.level->goatPos.size());
+					context.level->goatPos.push_back(coord);
+					ivec2 pp = context.level->playerPos;
+					std::sort(context.level->goatPos.begin(), context.level->goatPos.end(), [pp](ivec2 const& lhs, ivec2 const& rhs){ return dist(lhs, pp) < dist(rhs, pp); });
 				}
+
 			} else if (isRightMouseClicked(&mousePos)) {
 				ivec2 coord = getCoordFromScreenPos(mousePos, context.level->grid.Height, context.level->grid.Width);
 				CellRef* ref = context.level->grid.get(coord.y, coord.x);

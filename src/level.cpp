@@ -47,6 +47,7 @@ namespace game {
 		return level;
 	}
 
+
 	void processStep(Level& level) {
 		ivec2 newPlayerPos = getPositionFromEvent(level.playerPos);
 		if (newPlayerPos != level.playerPos && isValidMove(newPlayerPos, &level.grid)) {
@@ -58,10 +59,20 @@ namespace game {
 
 			Player player = level.grid.get(level.playerPos.y, level.playerPos.x)->player;
 			player.Dir = newPlayerPos - level.playerPos;
-			level.grid.remove(level.playerPos.y, level.playerPos.x);
-			level.grid.set(newPlayerPos.y, newPlayerPos.x, CellRef(Type::PLAYER, player));
+			ivec2 oldPlayerPos = level.playerPos;
+			level.grid.move(oldPlayerPos, newPlayerPos);
 			level.playerPos = newPlayerPos;
 			level.step += 1;
+
+			if (!level.goatPos.empty()) {
+				ivec2 nextPos = oldPlayerPos;
+				for (u32 i = 0; i < level.goatPos.size(); i++) {
+					ivec2 oldPos = level.goatPos[i];
+					level.goatPos[i] = nextPos;
+					level.grid.move(oldPos, nextPos);
+					nextPos = oldPos;
+				}
+			}
 
 			Grid newGrid = level.grid;
 			for (u32 row = 0; row < level.grid.Height; row++) {
@@ -74,6 +85,16 @@ namespace game {
 				}
 			}
 			level.grid = newGrid;
+			level.flags.defeated = level.grid.get(level.playerPos.y, level.playerPos.x)->type != Type::PLAYER;
+			if (!level.flags.defeated) {
+				for (ivec2& gpos : level.goatPos) {
+					printf("G Type %d\n", level.grid.get(gpos)->type);
+					if (level.grid.get(gpos)->type != Type::GOAT) {
+						level.flags.defeated = true;
+						break;
+					}
+				}
+			}
 		}
 	}
 
