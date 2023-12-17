@@ -29,7 +29,7 @@ namespace game {
 	DrawInfo RockDrawInfo;
 	Camera* camera;
 
-	GLuint GenerateTexture(string const& filePath) {
+	GLuint GenerateTexture(string const& filePath, bool useLinearFilter = false) {
 		s32 width, height, nComponents;
 		stbi_set_flip_vertically_on_load(true);
 		u8* data = stbi_load(filePath.c_str(), &width, &height, &nComponents, 0);
@@ -42,7 +42,11 @@ namespace game {
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			if (useLinearFilter) {
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			} else {
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			}
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
@@ -75,7 +79,7 @@ namespace game {
 		ChuDrawInfo.TextureRef = GenerateTexture("./assets/Chu.png");
 
 		GrassDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(-1.0, -1.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 0.4, 0.0, 0.6 }, { 1.0, 1.0 });
-		GrassDrawInfo.TextureRef = GenerateTexture("./assets/Grass.png");
+		GrassDrawInfo.TextureRef = GenerateTexture("./assets/Grass.png", true);
 
 		NextLevelPortalDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 1.0, 1.0, 1.0 });
 		NextLevelPortalDrawInfo.TextureRef = GenerateTexture("./assets/Portal.png");
