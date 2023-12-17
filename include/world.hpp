@@ -13,6 +13,7 @@ namespace game {
 	struct Goat;
 	struct Water; 
 	struct Moveable;
+	struct Saci;
 
 	//typedef std::variant<Player, Chu, Scenery, NextLevelPortal, Goat, Grass> CellRef;
 
@@ -25,6 +26,7 @@ namespace game {
 		GOAT,
 		WATER,
 		MOVEABLE,
+		SACI,
 		GRASS // More of a None type
 	};
 
@@ -64,6 +66,14 @@ namespace game {
 
 	};
 
+	enum SaciMoveType {
+		VCOPY,
+	};
+
+	struct Saci {
+		SaciMoveType moveType = VCOPY;
+	};
+
 	struct Moveable {
 		MoveableType type = ROCK;
 	};
@@ -80,6 +90,7 @@ namespace game {
 			Grass grass;
 			Water water;
 			Moveable moveable;
+			Saci saci;
 		};
 
 		CellRef() {
@@ -124,6 +135,10 @@ namespace game {
 			this->type = type;
 			this->moveable = moveable;
 		}
+		CellRef(Type type, Saci saci) {
+			this->type = type;
+			this->saci = saci;
+		}
 
 		CellRef(const CellRef& other) {
 			type = other.type;
@@ -151,6 +166,9 @@ namespace game {
 					break;
 				case MOVEABLE:
 					moveable = other.moveable;
+					break;
+				case SACI:
+					saci = other.saci;
 					break;
 			}
 		}

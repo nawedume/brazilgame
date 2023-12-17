@@ -14,7 +14,7 @@ namespace game {
 
 	bool hasKillable(ivec2 position, Grid* grid) {
 		CellRef* ref = grid->get(position.y, position.x);
-		return ref->type == Type::PLAYER || ref->type == Type::GOAT;
+		return ref->type == Type::PLAYER || ref->type == Type::GOAT || ref->type == Type::SACI;
 	}
 
 	void CommonRotate(ivec2 const axis[4], ivec2 pos, Grid* grid, u32 step) {

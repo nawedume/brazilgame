@@ -28,6 +28,7 @@ namespace game {
 	DrawInfo WaterDrawInfo;
 	DrawInfo RockDrawInfo;
 	DrawInfo RockyGrassDrawInfo;
+	DrawInfo SaciDrawInfo;
 	Camera* camera;
 
 	GLuint GenerateTexture(string const& filePath, bool useLinearFilter = false) {
@@ -97,6 +98,10 @@ namespace game {
 
 		RockDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 0.0, 0.0, 1.0 });
 		RockDrawInfo.TextureRef = GenerateTexture("./assets/Rock.png");
+
+
+		SaciDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 0.85, 0.85, 0.85 });
+		SaciDrawInfo.TextureRef = GenerateTexture("./assets/Saci.png");
 	}
 
 	void CreateVao(RenderState* state, bool isStatic) {

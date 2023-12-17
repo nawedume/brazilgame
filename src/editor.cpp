@@ -52,6 +52,10 @@ namespace game {
 				{
 					return CellRef(type, Moveable { MoveableType::ROCK } );
 				}
+			case Type::SACI:
+				{
+					return CellRef(type, Saci { } );
+				}
 		}
 	}
 
@@ -95,6 +99,11 @@ namespace game {
 				{
 					writeNum(ref->moveable.type, buffer, idx);
 					break;
+				}
+
+			case Type::SACI:
+				{
+					writeNum(ref->saci.moveType, buffer, idx);
 				}
 			default:
 				break;
@@ -315,6 +324,14 @@ namespace game {
 							u8 moveableType = stoi(strtok(nullptr, ";"));
 							Moveable moveable { .type = static_cast<MoveableType>(moveableType) };
 							level->grid.set(yi, xi, CellRef(Type::MOVEABLE, moveable));
+							break;
+						}
+					case Type::SACI:
+						{
+							u8 saciMoveType = stoi(strtok(nullptr, ";"));
+							Saci saci { .moveType = static_cast<SaciMoveType>(saciMoveType)};
+							level->saciPos.push_back({ xi, yi });
+							level->grid.set(yi, xi, CellRef(Type::SACI, saci));
 							break;
 						}
 					case Type::GRASS:

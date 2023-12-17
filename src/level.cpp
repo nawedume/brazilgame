@@ -95,6 +95,29 @@ namespace game {
 				}
 			}
 
+			if (!level.saciPos.empty()) {
+				for (int i = 0; i < level.saciPos.size(); i++) {
+					ivec2 saciPos = level.saciPos[i];
+					CellRef* ref = level.grid.get(saciPos);
+					assert(ref->type == Type::SACI);
+					switch (ref->saci.moveType) {
+						case SaciMoveType::VCOPY:
+							{
+								ivec2 newSaciPos = saciPos + ivec2(0, dir.y);
+								if (isValidMove(newSaciPos, &level.grid) && oldPlayerPos.y == saciPos.y) {
+									level.grid.move(saciPos, newSaciPos);
+									level.saciPos[i] = newSaciPos;
+								}
+								break;
+							}
+						default:
+							{
+								throw std::runtime_error("Saci move type not there\n");
+							}
+					}
+				}
+			}
+
 			Grid newGrid = level.grid;
 			for (u32 row = 0; row < level.grid.Height; row++) {
 				for (u32 col = 0; col < level.grid.Width; col++) {
@@ -113,6 +136,14 @@ namespace game {
 						level.flags.defeated = true;
 						break;
 					}
+				}
+
+				vector<ivec2> newSPos;
+				for (ivec2& spos : level.saciPos) {
+					if (level.grid.get(spos)-> type == Type::SACI) {
+						newSPos.push_back(spos);
+					}
+					level.saciPos = newSPos;
 				}
 			}
 		}

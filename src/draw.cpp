@@ -96,6 +96,11 @@ namespace game {
 							}
 							break;
 						}
+					case Type::SACI:
+						{
+							Draw(SaciDrawInfo, getClipPos(grid, row, col), cellScale);
+							break;
+						}
 					case Type::GRASS:
 						{
 							break;
