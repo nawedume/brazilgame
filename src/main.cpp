@@ -27,7 +27,7 @@ int main() {
 	game::setupGlad();
 	game::InitRenderState();
 
-	u32 levelIdx = 6;
+	u32 levelIdx = 1;
 	game::Level* currentLevel = game::ReadLevel(levelToName(levelIdx));
 	//game::Level currentLevel = game::createLevel(2);;
 
