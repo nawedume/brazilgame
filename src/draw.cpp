@@ -59,7 +59,9 @@ namespace game {
 						}
 					case Type::SCENERY:
 						{
-							Draw(TreeDrawInfo, getClipPos(grid, row, col), cellScale);
+							u32 oRandIndex = (row * col + col - row * 2) % 4;
+							f32 texOffset = oRandIndex * 0.25;
+							Draw(TreeDrawInfo, getClipPos(grid, row, col), cellScale, { texOffset, 0.0 });
 							break;
 						}
 					case Type::NEXTLEVELPORTAL:

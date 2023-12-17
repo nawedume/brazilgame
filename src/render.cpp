@@ -70,8 +70,8 @@ namespace game {
 		BlockShader = new Shader("./shaders/block.vs", "./shaders/block.fs");
 		BackgroundShader = new Shader("./shaders/bg.vs", "./shaders/bg.fs");
 
-		TreeDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 0.1, 1.0, 1.0 });
-		TreeDrawInfo.TextureRef = GenerateTexture("./assets/Tree.png");
+		TreeDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 0.1, 1.0, 1.0 }, { 0.25, 1.0 });
+		TreeDrawInfo.TextureRef = GenerateTexture("./assets/Tree2.png");
 
 		PlayerDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 0.1, 0.1, 0.6 });
 		PlayerDrawInfo.TextureRef = GenerateTexture("./assets/Man.png");

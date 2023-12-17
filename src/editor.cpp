@@ -138,6 +138,20 @@ namespace game {
 		} else if (isKeyClicked(KEY_O)) {
 			printf("edit mode\n");
 			context.state = EState::OPEN;
+		} else if (isKeyClicked(KEY_S)) {
+			printf("Solving\n");
+			Level& level = *context.level;
+			context.instructionIndex = 0;
+			context.recordedInstructions = solveLevel(level);
+			printf("Solveeeed\n");
+		} else if (isKeyClicked(KEY_D)) {
+			if (context.recordedInstructions.size() == 0) {
+				printf("No instructions\n");
+				return;
+			}
+			context.instructionIndex = context.instructionIndex % context.recordedInstructions.size();
+			printf("Playing recorded instruction at %d / %lu\n", context.instructionIndex, context.recordedInstructions.size());
+			processStep(*context.level, context.recordedInstructions[context.instructionIndex++]);
 		}
 
 		if (context.state == EState::PLACING) {

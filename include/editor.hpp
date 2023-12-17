@@ -16,6 +16,8 @@ namespace game {
 		Type entId = Type::SCENERY;
 		u8 chuFunc;
 		EState state;
+		vector<ivec2> recordedInstructions;
+		u32 instructionIndex;
 	};
 
 	void EditorController(EditorContext& context);

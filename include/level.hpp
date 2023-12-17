@@ -25,4 +25,8 @@ namespace game {
 	extern Level createLevel(u32 levelIdx);
 
 	extern void next(Level& level);
+
+	extern void processStep(Level& level, ivec2 dir);
+
+	extern vector<ivec2> solveLevel(Level level);
 }

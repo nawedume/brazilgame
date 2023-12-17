@@ -55,9 +55,7 @@ namespace game {
 		return level;
 	}
 
-
-	void processStep(Level& level) {
-		ivec2 dir = getDirectionFromEvent();
+	void processStep(Level& level, ivec2 dir) {
 		ivec2 newPlayerPos = level.playerPos + dir;
 		if (dir != ivec2(0, 0) && isValidMove(newPlayerPos, &level.grid)) {
 			CellRef* previousCellRef = level.grid.get(newPlayerPos.y, newPlayerPos.x);
@@ -121,6 +119,62 @@ namespace game {
 	}
 
 	void next(Level& level) {
-		processStep(level);
+		ivec2 dir = getDirectionFromEvent();
+		processStep(level, dir);
+	}
+
+	bool solve(Level level, vector<ivec2>& instructions) {
+		if (level.step != instructions.size()) {
+			printf("%d, %lu\n", level.step, instructions.size());
+		}
+
+		if (level.step > 25) {
+			return false;
+		}
+
+		ivec2 Dirs[4] = { X_AXIS, Y_AXIS, -X_AXIS, -Y_AXIS };
+		Level pLevel = level;
+
+		for (auto dir : Dirs) {
+			level = pLevel;
+			processStep(level, dir);
+
+			if (level.flags.defeated) {
+				continue;
+			}
+			else {
+				instructions.push_back(dir);
+
+				if (level.flags.completed) {
+					return true;
+				}
+				else if (level.step != pLevel.step) {
+					if (solve(level, instructions)) {
+						return true;
+					} else {
+						instructions.pop_back();
+					}
+				} else {
+					instructions.pop_back();
+				}
+			}
+		}
+
+		return false;
+	}
+
+	vector<ivec2> solveLevel(Level level) {
+		vector<ivec2> instructions {}; 
+		if (!solve(level, instructions)) {
+			printf("Not solved\n");
+		} else {
+			printf("Solved\n");
+		}
+
+		//for (auto inst : instructions) {
+		//	printf("%d, %d\n", inst.x, inst.y);
+		//}
+
+		return instructions;
 	}
 }
