@@ -20,23 +20,23 @@ namespace game {
 	CellRef createRefDefault(Type type) {
 
 		switch (type) {
-			case Type::PLAYER: // player
+			case Type::PLAYER:
 				{
 					return CellRef(type, Player { .Dir = X_AXIS });
 				}
-			case Type::CHU: // chu
+			case Type::CHU: 
 				{
 					return CellRef(type, Chu { .Dir = X_AXIS, .Func = ChuFuncs[0] });
 				}
-			case Type::SCENERY: // scenery
+			case Type::SCENERY:
 				{
 					return CellRef(type, Scenery { .Type = TREE });
 				}
-			case Type::NEXTLEVELPORTAL: // portal
+			case Type::NEXTLEVELPORTAL:
 				{
 					return CellRef(type, NextLevelPortal { });
 				}
-			case Type::GRASS: // grass
+			case Type::GRASS:
 				{
 					return CellRef(type, Grass { });
 				}
@@ -44,8 +44,15 @@ namespace game {
 				{
 					return CellRef(type, Goat { });
 				}
+			case Type::WATER:
+				{
+					return CellRef(type, Water { });
+				}
+			case Type::MOVEABLE:
+				{
+					return CellRef(type, Moveable { MoveableType::ROCK } );
+				}
 		}
-
 	}
 
 	ivec2 getCoordFromScreenPos(vec2 screenPos, u32 height, u32 width) {
@@ -82,6 +89,11 @@ namespace game {
 					writeNum(chu.Dir.x, buffer, idx);
 					writeNum(chu.Dir.y, buffer, idx);
 					writeNum(0, buffer, idx);
+					break;
+				}
+			case Type::MOVEABLE:
+				{
+					writeNum(ref->moveable.type, buffer, idx);
 					break;
 				}
 			default:
@@ -276,6 +288,20 @@ namespace game {
 							Goat goat {};
 							level->goatPos.push_back({xi, yi });
 							level->grid.set(yi, xi, CellRef(Type::GOAT, goat));
+							break;
+						}
+					case Type::WATER:
+						{
+							Water water {};
+							level->grid.set(yi, xi, CellRef(Type::WATER, water));
+							break;
+						}
+					case Type::MOVEABLE:
+						{
+							u8 moveableType = stoi(strtok(nullptr, ";"));
+							Moveable moveable { .type = static_cast<MoveableType>(moveableType) };
+							level->grid.set(yi, xi, CellRef(Type::MOVEABLE, moveable));
+							break;
 						}
 					case Type::GRASS:
 						{

@@ -28,6 +28,8 @@ namespace game {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
 
+		DrawBackground(GrassDrawInfo);
+
 		vec2 cellScale;
 		cellScale.x = 1.0f / grid->Width;
 		cellScale.y = 1.0f / grid->Height;
@@ -63,6 +65,27 @@ namespace game {
 							break;
 						}
 
+					case Type::WATER:
+						{
+							Draw(WaterDrawInfo, getClipPos(grid, row, col), cellScale);
+							break;
+						}
+					case Type::MOVEABLE:
+						{
+							switch (ref->moveable.type) {
+								case MoveableType::ROCK:
+									{
+										Draw(RockDrawInfo, getClipPos(grid, row, col), cellScale);
+										break;
+									}
+								default:
+									{
+										fprintf(stderr, "No moveable type found\n");
+										break;
+									}
+							}
+							break;
+						}
 					case Type::GRASS:
 						{
 							break;

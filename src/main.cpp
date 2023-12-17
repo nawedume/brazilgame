@@ -48,7 +48,7 @@ int main() {
 		f32 CurrentTime = glfwGetTime(); 
 		f32 DeltaTime = CurrentTime - PreviousTime;
 		PreviousTime = CurrentTime;
-		game::clearWindow(0.6, 0.8, 0.6, 1.0);
+		game::clearWindow(0.6, 0.0, 0.6, 1.0);
 
 		if (game::isKeyClicked(game::KEY_R)) {
 			if (isEditor) {

@@ -55,6 +55,8 @@ namespace game {
 	extern DrawInfo GrassDrawInfo;
 	extern DrawInfo NextLevelPortalDrawInfo;
 	extern DrawInfo GoatDrawInfo;
+	extern DrawInfo WaterDrawInfo;
+	extern DrawInfo RockDrawInfo;
 
 	extern void CreateVao(RenderState* state, bool isStatic);
 
@@ -67,5 +69,7 @@ namespace game {
 	extern void Draw(DrawInfo& drawInfo, vec2 position, vec2 scale);
 
 	extern void Draw(DrawInfo& drawInfo, vec2 position, vec2 scale, vec2 textureOffset);
+
+	extern void DrawBackground(DrawInfo& bgInfo);
 };
 

@@ -9,26 +9,34 @@ namespace game {
 		return ref->type == Type::GRASS || ref->type == Type::NEXTLEVELPORTAL;
 	}
 
-	bool isValidMove(ivec2 position, game::Grid* grid) {
+	bool isValidMove(ivec2 position, Grid* grid) {
 		game::CellRef* ref = grid->get(position.y, position.x); 
-		return game::isInBounds(position, grid) && isWalkable(ref);
+		return game::isInBounds(position, grid) && (isWalkable(ref) || ref->type == Type::MOVEABLE);
 	}
 
-	ivec2 getPositionFromEvent(ivec2 oldPos) {
-			ivec2 newPlayerPos = oldPos;
+	bool isPushableArea(CellRef* ref) {
+		return ref->type == Type::GRASS || ref->type == Type::WATER;
+	}
+
+	bool isValidMoveableMove(ivec2 position, Grid* grid) {
+		game::CellRef* ref = grid->get(position.y, position.x); 
+		return game::isInBounds(position, grid) && isPushableArea(ref);
+	}
+
+	ivec2 getDirectionFromEvent() {
 			if (game::isKeyClicked(game::KEY_D)) {
-				newPlayerPos += X_AXIS;
+				return X_AXIS;
 			}
 			else if (game::isKeyClicked(game::KEY_A)) {
-				newPlayerPos -= X_AXIS;
+				return -X_AXIS;
 			}
 			else if (game::isKeyClicked(game::KEY_W)) {
-				newPlayerPos += Y_AXIS;
+				return Y_AXIS;
 			}
 			else if (game::isKeyClicked(game::KEY_S)) {
-				newPlayerPos -= Y_AXIS;
+				return -Y_AXIS;
 			}
-			return newPlayerPos;
+			return ivec2(0, 0);
 	}
 
 	Level createEmptyLevel() {
@@ -49,12 +57,20 @@ namespace game {
 
 
 	void processStep(Level& level) {
-		ivec2 newPlayerPos = getPositionFromEvent(level.playerPos);
-		if (newPlayerPos != level.playerPos && isValidMove(newPlayerPos, &level.grid)) {
+		ivec2 dir = getDirectionFromEvent();
+		ivec2 newPlayerPos = level.playerPos + dir;
+		if (dir != ivec2(0, 0) && isValidMove(newPlayerPos, &level.grid)) {
 			CellRef* previousCellRef = level.grid.get(newPlayerPos.y, newPlayerPos.x);
 			if (previousCellRef->type == Type::NEXTLEVELPORTAL) {
 				level.flags.completed = true;
 				return;
+			} else if (previousCellRef->type == Type::MOVEABLE) {
+				ivec2 newMoveablePos = newPlayerPos + dir;
+				if (!isValidMoveableMove(newMoveablePos, &level.grid)) {
+					return;
+				} else {
+					level.grid.move(newPlayerPos, newMoveablePos);
+				}
 			}
 
 			Player player = level.grid.get(level.playerPos.y, level.playerPos.x)->player;

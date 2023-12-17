@@ -17,6 +17,7 @@ namespace game {
 
 	RenderState* WorldRenderState;
 	Shader* BlockShader;
+	Shader* BackgroundShader;
 
 	DrawInfo PlayerDrawInfo;
 	DrawInfo ChuDrawInfo;
@@ -24,6 +25,8 @@ namespace game {
 	DrawInfo GrassDrawInfo;
 	DrawInfo NextLevelPortalDrawInfo;
 	DrawInfo GoatDrawInfo;
+	DrawInfo WaterDrawInfo;
+	DrawInfo RockDrawInfo;
 	Camera* camera;
 
 	GLuint GenerateTexture(string const& filePath) {
@@ -60,6 +63,8 @@ namespace game {
 		camera->Size = { CAMERA_WIDTH, CAMERA_HEIGHT };
 
 		BlockShader = new Shader("./shaders/block.vs", "./shaders/block.fs");
+		BackgroundShader = new Shader("./shaders/bg.vs", "./shaders/bg.fs");
+
 		TreeDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 0.1, 1.0, 1.0 });
 		TreeDrawInfo.TextureRef = GenerateTexture("./assets/Tree.png");
 
@@ -69,13 +74,20 @@ namespace game {
 		ChuDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 1.0, 0.0, 0.3 }, { 1.0, 0.25 });
 		ChuDrawInfo.TextureRef = GenerateTexture("./assets/Chu.png");
 
-		GrassDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 0.4, 1.0, 0.6 });
+		GrassDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(-1.0, -1.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 0.4, 0.0, 0.6 }, { 1.0, 1.0 });
+		GrassDrawInfo.TextureRef = GenerateTexture("./assets/Grass.png");
 
 		NextLevelPortalDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 1.0, 1.0, 1.0 });
 		NextLevelPortalDrawInfo.TextureRef = GenerateTexture("./assets/Portal.png");
 
 		GoatDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 1.0, 1.0, 1.0 },  { 0.25, 1.0 });
 		GoatDrawInfo.TextureRef = GenerateTexture("./assets/Goat.png");
+
+		WaterDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 0.0, 0.0, 1.0 });
+		WaterDrawInfo.TextureRef = GenerateTexture("./assets/Water.png");
+
+		RockDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 0.0, 0.0, 1.0 });
+		RockDrawInfo.TextureRef = GenerateTexture("./assets/Rock.png");
 	}
 
 	void CreateVao(RenderState* state, bool isStatic) {
@@ -136,5 +148,13 @@ namespace game {
 
 		glBindVertexArray(WorldRenderState->Vao);
 		glDrawArrays(GL_TRIANGLES, drawInfo.BufferIndex, 6);
+	}
+
+	void DrawBackground(DrawInfo& bgInfo) {
+		BackgroundShader->use();
+		glBindTexture(GL_TEXTURE_2D, bgInfo.TextureRef);
+		glBindVertexArray(WorldRenderState->Vao);
+		glDrawArrays(GL_TRIANGLES, bgInfo.BufferIndex, 6);
+
 	}
 }

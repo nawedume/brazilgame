@@ -61,7 +61,6 @@ namespace game {
 
 		ivec2 newPos = game::CommonAttack(pos, grid, step);
 		if (pos == newPos) {
-			CellRef* ref = grid->get(pos.y, pos.x);
 			game::CommonRotate(rotations, newPos, grid, step);
 		}
 	}
@@ -71,14 +70,15 @@ namespace game {
 	}
 
 	void AttackOrRotate(ivec2 pos, Grid* grid, u32 step) {
-		Chu chu = grid->get(pos.y, pos.x)->chu;
 		ivec2 newPos = game::CommonAttack(pos, grid, step);
 		if (pos == newPos) {
 			Chu& ref = grid->get(pos.y, pos.x)->chu;
 			ivec2 newDir = rotateAxis(ref.Dir);
 			while (newDir != ref.Dir) {
 				ivec2 neighbourPos = pos + newDir;
-				if (grid->get(neighbourPos.y, neighbourPos.x)->type != Type::SCENERY) {
+				Type neighbourType = grid->get(neighbourPos.y, neighbourPos.x)->type;
+				// @attention moveable should just be scenery
+				if (neighbourType != Type::SCENERY && neighbourType != Type::MOVEABLE) {
 					ref.Dir = newDir;
 					return;
 				}

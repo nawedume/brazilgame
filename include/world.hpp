@@ -11,16 +11,25 @@ namespace game {
 	struct Grass;
 	struct NextLevelPortal;
 	struct Goat;
+	struct Water; 
+	struct Moveable;
 
 	//typedef std::variant<Player, Chu, Scenery, NextLevelPortal, Goat, Grass> CellRef;
 
+	// @attenion, only add to the end of the list, or else the level reading/writing won't work!
 	enum Type {
 		PLAYER,
 		CHU,
 		SCENERY,
 		NEXTLEVELPORTAL,
 		GOAT,
-		GRASS
+		WATER,
+		MOVEABLE,
+		GRASS // More of a None type
+	};
+
+	enum MoveableType {
+		ROCK
 	};
 
 	struct Player {
@@ -52,6 +61,14 @@ namespace game {
 	struct Goat {
 	};
 
+	struct Water {
+
+	};
+
+	struct Moveable {
+		MoveableType type = ROCK;
+	};
+
 	struct CellRef {
 		Type type;
 
@@ -62,6 +79,8 @@ namespace game {
 			NextLevelPortal nlPortal;
 			Goat goat;
 			Grass grass;
+			Water water;
+			Moveable moveable;
 		};
 
 		CellRef() {
@@ -98,6 +117,14 @@ namespace game {
 			this->type = Type::GRASS;
 			this->grass = grass;
 		}
+		CellRef(Type type, Water water) {
+			this->type = Type::WATER;
+			this->water = water;
+		}
+		CellRef(Type type, Moveable moveable) {
+			this->type = type;
+			this->moveable = moveable;
+		}
 
 		CellRef(const CellRef& other) {
 			type = other.type;
@@ -117,8 +144,15 @@ namespace game {
 				case GOAT:
 					goat = other.goat;
 					break;
+
+				case WATER:
+					water = other.water;
+					break;
 				case GRASS:
 					grass = other.grass;
+					break;
+				case MOVEABLE:
+					moveable = other.moveable;
 					break;
 			}
 		}
