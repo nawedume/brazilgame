@@ -1,8 +1,8 @@
 #pragma once
 
 #include <core.hpp>
-#include <world.hpp>
+#include <level.hpp>
 
 namespace game {
-	extern void DrawGrid(Grid* grid);
+	extern void DrawLevel(Level* level);
 };

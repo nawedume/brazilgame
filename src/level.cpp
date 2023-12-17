@@ -69,7 +69,14 @@ namespace game {
 				if (!isValidMoveableMove(newMoveablePos, &level.grid)) {
 					return;
 				} else {
-					level.grid.move(newPlayerPos, newMoveablePos);
+					CellRef* pMoveableCellRef= level.grid.get(newMoveablePos);
+					if (Type::WATER == pMoveableCellRef->type) {
+						level.grid.remove(newPlayerPos);
+						level.grid.set(newMoveablePos, { GRASS, Grass { } });
+						level.rockyGrassPos.push_back(newMoveablePos);
+					} else {
+						level.grid.move(newPlayerPos, newMoveablePos);
+					}
 				}
 			}
 

@@ -84,7 +84,7 @@ int main() {
 		}
 
 		editorContext.level = currentLevel;
-		game::DrawGrid(&currentLevel->grid);
+		game::DrawLevel(currentLevel);
 
 		game::swapBuffers();
 		game::windowSystemPollEvents();

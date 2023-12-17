@@ -19,6 +19,7 @@ namespace game {
 		Flags flags { 0 };
 		string levelName;
 		vector<ivec2> goatPos;
+		vector<ivec2> rockyGrassPos; // @attention should probably change this to generic "special walkable", this isn't event grass.
 	};
 
 	extern Level createLevel(u32 levelIdx);

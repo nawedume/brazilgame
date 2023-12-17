@@ -27,6 +27,7 @@ namespace game {
 	DrawInfo GoatDrawInfo;
 	DrawInfo WaterDrawInfo;
 	DrawInfo RockDrawInfo;
+	DrawInfo RockyGrassDrawInfo;
 	Camera* camera;
 
 	GLuint GenerateTexture(string const& filePath, bool useLinearFilter = false) {
@@ -80,6 +81,10 @@ namespace game {
 
 		GrassDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(-1.0, -1.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 0.4, 0.0, 0.6 }, { 1.0, 1.0 });
 		GrassDrawInfo.TextureRef = GenerateTexture("./assets/Grass.png", true);
+
+		RockyGrassDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 0.1, 0.1, 0.1 });
+		RockyGrassDrawInfo.TextureRef = GenerateTexture("./assets/RockyGrass.png", true);
+
 
 		NextLevelPortalDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 1.0, 1.0, 1.0 });
 		NextLevelPortalDrawInfo.TextureRef = GenerateTexture("./assets/Portal.png");

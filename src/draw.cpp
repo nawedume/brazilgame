@@ -2,6 +2,7 @@
 #include <render.hpp>
 #include <world.hpp>
 #include <glad/glad.h>
+#include <level.hpp>
 
 namespace game {
 
@@ -24,7 +25,9 @@ namespace game {
 		}
 	}
 
-	void DrawGrid(Grid* grid) {
+	void DrawLevel(Level* level) {
+		Grid* const grid = &level->grid;
+
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
 
@@ -33,6 +36,11 @@ namespace game {
 		vec2 cellScale;
 		cellScale.x = 1.0f / grid->Width;
 		cellScale.y = 1.0f / grid->Height;
+
+		for (int i = 0; i < level->rockyGrassPos.size(); i++) {
+			ivec2 pos = level->rockyGrassPos[i];
+			Draw(RockyGrassDrawInfo, getClipPos(grid, pos.y, pos.x), cellScale);
+		}
 
 		for (u32 row = 0; row < grid->Height; row++) {
 			for (u32 col = 0; col < grid->Width; col++) {

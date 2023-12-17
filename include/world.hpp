@@ -52,7 +52,6 @@ namespace game {
 	};
 
 	struct Grass {
-
 	};
 
 	struct NextLevelPortal {
@@ -144,7 +143,6 @@ namespace game {
 				case GOAT:
 					goat = other.goat;
 					break;
-
 				case WATER:
 					water = other.water;
 					break;
@@ -178,6 +176,10 @@ namespace game {
 
 		void set(u8 row, u8 col, CellRef ref) {
 			Data[(row * Width) + col] = ref;
+		}
+
+		void set(ivec2 pos, CellRef ref) {
+			set(pos.y, pos.x, ref);
 		}
 
 		void remove(u8 row, u8 col) {
