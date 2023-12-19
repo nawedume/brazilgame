@@ -14,6 +14,11 @@ namespace game {
 		return game::isInBounds(position, grid) && (isWalkable(ref) || ref->type == Type::MOVEABLE);
 	}
 
+	bool isValidSaciMove(ivec2 position, Grid* grid) {
+		game::CellRef* ref = grid->get(position.y, position.x); 
+		return isValidMove(position, grid); //&& (ref->type != Type::GRASS || ref->grass.type != GrassType::ROCKY);
+	}
+
 	bool isPushableArea(CellRef* ref) {
 		return ref->type == Type::GRASS || ref->type == Type::WATER;
 	}
@@ -55,6 +60,24 @@ namespace game {
 		return level;
 	}
 
+	bool processMoveableMove(ivec2 newPlayerPos, ivec2 dir, Level& level) {
+		ivec2 newMoveablePos = newPlayerPos + dir;
+		if (!isValidMoveableMove(newMoveablePos, &level.grid)) {
+			return false;
+		} else {
+			CellRef* pMoveableCellRef= level.grid.get(newMoveablePos);
+			if (Type::WATER == pMoveableCellRef->type) {
+				level.grid.remove(newPlayerPos);
+				level.grid.set(newMoveablePos, { GRASS, Grass { .type = GrassType::ROCKY } });
+				level.rockyGrassPos.push_back(newMoveablePos);
+			} else {
+				level.grid.move(newPlayerPos, newMoveablePos);
+			}
+			return true;
+		}
+	}
+
+
 	void processStep(Level& level, ivec2 dir) {
 		ivec2 newPlayerPos = level.playerPos + dir;
 		if (dir != ivec2(0, 0) && isValidMove(newPlayerPos, &level.grid)) {
@@ -63,18 +86,8 @@ namespace game {
 				level.flags.completed = true;
 				return;
 			} else if (previousCellRef->type == Type::MOVEABLE) {
-				ivec2 newMoveablePos = newPlayerPos + dir;
-				if (!isValidMoveableMove(newMoveablePos, &level.grid)) {
+				if (!processMoveableMove(newPlayerPos, dir, level)) {
 					return;
-				} else {
-					CellRef* pMoveableCellRef= level.grid.get(newMoveablePos);
-					if (Type::WATER == pMoveableCellRef->type) {
-						level.grid.remove(newPlayerPos);
-						level.grid.set(newMoveablePos, { GRASS, Grass { } });
-						level.rockyGrassPos.push_back(newMoveablePos);
-					} else {
-						level.grid.move(newPlayerPos, newMoveablePos);
-					}
 				}
 			}
 
@@ -105,6 +118,22 @@ namespace game {
 							{
 								ivec2 newSaciPos = saciPos + ivec2(0, dir.y);
 								if (isValidMove(newSaciPos, &level.grid) && oldPlayerPos.y == saciPos.y) {
+									level.grid.move(saciPos, newSaciPos);
+									level.saciPos[i] = newSaciPos;
+								}
+								break;
+							}
+						case SaciMoveType::INVERSE_MIMIC:
+							{
+								ivec2 newSaciPos = saciPos - dir;
+								if (isValidMove(newSaciPos, &level.grid)) {
+									CellRef* previousCellRef = level.grid.get(newSaciPos);
+									if (previousCellRef->type == Type::MOVEABLE) {
+										if (!processMoveableMove(newSaciPos, -dir, level)) {
+											return;
+										}
+									}
+
 									level.grid.move(saciPos, newSaciPos);
 									level.saciPos[i] = newSaciPos;
 								}

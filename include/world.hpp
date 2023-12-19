@@ -53,7 +53,13 @@ namespace game {
 		ScenearyType Type;
 	};
 
+	enum GrassType {
+		NORMAL,
+		ROCKY
+	};
+
 	struct Grass {
+		GrassType type = NORMAL;
 	};
 
 	struct NextLevelPortal {
@@ -68,6 +74,7 @@ namespace game {
 
 	enum SaciMoveType {
 		VCOPY,
+		INVERSE_MIMIC
 	};
 
 	struct Saci {
