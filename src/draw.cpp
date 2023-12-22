@@ -40,6 +40,7 @@ namespace game {
 		for (int i = 0; i < level->rockyGrassPos.size(); i++) {
 			ivec2 pos = level->rockyGrassPos[i];
 			Draw(RockyGrassDrawInfo, getClipPos(grid, pos.y, pos.x), cellScale);
+			//DrawBackground(RockyGrassDrawInfo);
 		}
 
 		for (u32 row = 0; row < grid->Height; row++) {
@@ -48,7 +49,8 @@ namespace game {
 				switch (ref->type) {
 					case Type::PLAYER:
 						{
-							Draw(PlayerDrawInfo, getClipPos(grid, row, col), cellScale);
+							vec2 texOffset  = texOffsetFromDir(ref->player.Dir);
+							Draw(PlayerDrawInfo, getClipPos(grid, row, col), cellScale, texOffset);
 							break;
 						}
 					case Type::CHU:
@@ -59,9 +61,7 @@ namespace game {
 						}
 					case Type::SCENERY:
 						{
-							u32 oRandIndex = (row * col + col - row * 2) % 4;
-							f32 texOffset = oRandIndex * 0.25;
-							Draw(TreeDrawInfo, getClipPos(grid, row, col), cellScale, { texOffset, 0.0 });
+							Draw(TreeDrawInfo, getClipPos(grid, row, col), cellScale);
 							break;
 						}
 					case Type::NEXTLEVELPORTAL:
@@ -71,7 +71,8 @@ namespace game {
 						}
 					case Type::GOAT:
 						{
-							Draw(GoatDrawInfo, getClipPos(grid, row, col), cellScale);
+							vec2 texOffset  = texOffsetFromDir(ref->goat.Dir);
+							Draw(GoatDrawInfo, getClipPos(grid, row, col), cellScale, texOffset);
 							break;
 						}
 
@@ -107,6 +108,10 @@ namespace game {
 						}
 				};
 			}
+		}
+
+		if (level->flags.defeated) {
+			game::DrawRestartScreen();
 		}
 	}
 }

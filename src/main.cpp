@@ -51,11 +51,7 @@ int main() {
 		game::clearWindow(0.6, 0.0, 0.6, 1.0);
 
 		if (game::isKeyClicked(game::KEY_R)) {
-			if (isEditor) {
-				currentLevel = game::ReadLevel(currentLevel->levelName);
-			} else {
-				currentLevel = game::ReadLevel(currentLevel->levelName);
-			}
+			currentLevel = game::ReadLevel(currentLevel->levelName);
 		}
 
 		if (game::isKeyClicked(game::KEY_E)) {
@@ -74,13 +70,9 @@ int main() {
 				currentLevel = editorContext.level;
 			}
 		} else {
-			game::next(*currentLevel);
-		}
-
-		if (currentLevel->flags.defeated) {
-			// player has died
-			printf("Player has died\n");
-			currentLevel = game::ReadLevel(currentLevel->levelName);
+			if (!currentLevel->flags.defeated) {
+				game::next(*currentLevel);
+			}
 		}
 
 		editorContext.level = currentLevel;

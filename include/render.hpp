@@ -73,5 +73,7 @@ namespace game {
 	extern void Draw(DrawInfo& drawInfo, vec2 position, vec2 scale, vec2 textureOffset);
 
 	extern void DrawBackground(DrawInfo& bgInfo);
+
+	extern void DrawRestartScreen();
 };
 

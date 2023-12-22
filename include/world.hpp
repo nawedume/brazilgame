@@ -66,6 +66,7 @@ namespace game {
 	};
 
 	struct Goat {
+		ivec2 Dir = X_AXIS;
 	};
 
 	struct Water {

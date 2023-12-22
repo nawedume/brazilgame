@@ -29,6 +29,7 @@ namespace game {
 	DrawInfo RockDrawInfo;
 	DrawInfo RockyGrassDrawInfo;
 	DrawInfo SaciDrawInfo;
+	DrawInfo RestartDrawInfo;
 	Camera* camera;
 
 	GLuint GenerateTexture(string const& filePath, bool useLinearFilter = false) {
@@ -71,10 +72,13 @@ namespace game {
 		BlockShader = new Shader("./shaders/block.vs", "./shaders/block.fs");
 		BackgroundShader = new Shader("./shaders/bg.vs", "./shaders/bg.fs");
 
-		TreeDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 0.1, 1.0, 1.0 }, { 0.25, 1.0 });
-		TreeDrawInfo.TextureRef = GenerateTexture("./assets/Tree2.png");
+		RestartDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(-0.5, 0.0), .WorldPosEnd =vec2(0.5, 0.5) }, { 1.0, 1.0, 1.0 });
+		RestartDrawInfo.TextureRef = GenerateTexture("./assets/RestartText.png");
 
-		PlayerDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 0.1, 0.1, 0.6 });
+		TreeDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 0.1, 1.0, 1.0 });
+		TreeDrawInfo.TextureRef = GenerateTexture("./assets/Tree.png");
+
+		PlayerDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 0.1, 0.1, 0.6 }, { 1.0, 0.25 });
 		PlayerDrawInfo.TextureRef = GenerateTexture("./assets/Man.png");
 
 		ChuDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 1.0, 0.0, 0.3 }, { 1.0, 0.25 });
@@ -90,8 +94,8 @@ namespace game {
 		NextLevelPortalDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 1.0, 1.0, 1.0 });
 		NextLevelPortalDrawInfo.TextureRef = GenerateTexture("./assets/Portal.png");
 
-		GoatDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 1.0, 1.0, 1.0 },  { 0.25, 1.0 });
-		GoatDrawInfo.TextureRef = GenerateTexture("./assets/Goat.png");
+		GoatDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 1.0, 0.0, 0.3 }, { 1.0, 0.25 });
+		GoatDrawInfo.TextureRef = GenerateTexture("./assets/Goat2.png");
 
 		WaterDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 0.0, 0.0, 1.0 });
 		WaterDrawInfo.TextureRef = GenerateTexture("./assets/Water.png");
@@ -166,9 +170,17 @@ namespace game {
 
 	void DrawBackground(DrawInfo& bgInfo) {
 		BackgroundShader->use();
+		BackgroundShader->setFloat("uZIndex", 0.9f);
 		glBindTexture(GL_TEXTURE_2D, bgInfo.TextureRef);
 		glBindVertexArray(WorldRenderState->Vao);
 		glDrawArrays(GL_TRIANGLES, bgInfo.BufferIndex, 6);
+	}
 
+	void DrawRestartScreen() {
+		BackgroundShader->use();
+		BackgroundShader->setFloat("uZIndex", -1.0f);
+		glBindTexture(GL_TEXTURE_2D, RestartDrawInfo.TextureRef);
+		glBindVertexArray(WorldRenderState->Vao);
+		glDrawArrays(GL_TRIANGLES, RestartDrawInfo.BufferIndex, 6);
 	}
 }

@@ -29,16 +29,16 @@ namespace game {
 	}
 
 	ivec2 getDirectionFromEvent() {
-			if (game::isKeyClicked(game::KEY_D)) {
+			if (game::isKeyClicked(game::KEY_D) || isKeyClicked(KEY_RIGHT)) {
 				return X_AXIS;
 			}
-			else if (game::isKeyClicked(game::KEY_A)) {
+			else if (game::isKeyClicked(game::KEY_A) || isKeyClicked(KEY_LEFT)) {
 				return -X_AXIS;
 			}
-			else if (game::isKeyClicked(game::KEY_W)) {
+			else if (game::isKeyClicked(game::KEY_W) || isKeyClicked(KEY_UP)) {
 				return Y_AXIS;
 			}
-			else if (game::isKeyClicked(game::KEY_S)) {
+			else if (game::isKeyClicked(game::KEY_S) || isKeyClicked(KEY_DOWN)) {
 				return -Y_AXIS;
 			}
 			return ivec2(0, 0);
@@ -92,18 +92,23 @@ namespace game {
 			}
 
 			Player player = level.grid.get(level.playerPos.y, level.playerPos.x)->player;
-			player.Dir = newPlayerPos - level.playerPos;
+			//player.Dir = newPlayerPos - level.playerPos;
 			ivec2 oldPlayerPos = level.playerPos;
 			level.grid.move(oldPlayerPos, newPlayerPos);
 			level.playerPos = newPlayerPos;
+			level.grid.get(level.playerPos)->player.Dir = dir;
 			level.step += 1;
 
 			if (!level.goatPos.empty()) {
 				ivec2 nextPos = oldPlayerPos;
+				ivec2 nextDir = dir; 
 				for (u32 i = 0; i < level.goatPos.size(); i++) {
 					ivec2 oldPos = level.goatPos[i];
+					ivec2 oldDir = level.grid.get(oldPos)->goat.Dir;
 					level.goatPos[i] = nextPos;
 					level.grid.move(oldPos, nextPos);
+					level.grid.get(nextPos)->goat.Dir = nextDir;
+					nextDir = oldDir;
 					nextPos = oldPos;
 				}
 			}
