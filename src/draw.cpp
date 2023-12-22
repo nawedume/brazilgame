@@ -25,6 +25,14 @@ namespace game {
 		}
 	}
 
+	void DrawEndScreen() {
+		DrawBackground(EndScreenDrawInfo);
+	}
+
+	void DrawTitleScreen() {
+		DrawBackground(TitleScreenDrawInfo);
+	}
+
 	void DrawLevel(Level* level) {
 		Grid* const grid = &level->grid;
 

@@ -39,6 +39,8 @@ int main() {
 	editorContext.state = game::EState::PLACING;
 	editorContext.chuFunc = 0;
 
+	bool isTitleScreen = true;
+	bool isGameCompleted = false;
 	while (!game::shouldCloseWindow()) {
 #ifdef DEBUG
 	if (game::isKeyClicked(game::KEY_Q)) {
@@ -50,33 +52,56 @@ int main() {
 		PreviousTime = CurrentTime;
 		game::clearWindow(0.6, 0.0, 0.6, 1.0);
 
-		if (game::isKeyClicked(game::KEY_R)) {
-			currentLevel = game::ReadLevel(currentLevel->levelName);
-		}
+		if (isTitleScreen) {
+			game::DrawTitleScreen();
 
-		if (game::isKeyClicked(game::KEY_E)) {
-			isEditor = !isEditor;
-			printf("Editor mode: %d\n", isEditor);
-		}
-
-		if (currentLevel->flags.completed) {
-			levelIdx += 1;
-			currentLevel = game::ReadLevel(levelToName(levelIdx));
-		}
-
-		if (isEditor) {
-			game::EditorController(editorContext);
-			if (editorContext.level != currentLevel) {
-				currentLevel = editorContext.level;
+			if (game::isKeyClicked(game::KEY_R)) {
+				isTitleScreen = false;
 			}
 		} else {
-			if (!currentLevel->flags.defeated) {
-				game::next(*currentLevel);
+			if (game::isKeyClicked(game::KEY_R)) {
+				currentLevel = game::ReadLevel(currentLevel->levelName);
+			}
+
+			if (game::isKeyClicked(game::KEY_E)) {
+				isEditor = !isEditor;
+				printf("Editor mode: %d\n", isEditor);
+			}
+
+			if (currentLevel->flags.completed) {
+
+				if (levelIdx == 8) {
+					isGameCompleted = true;
+				}
+				else {
+					levelIdx += 1;
+					currentLevel = game::ReadLevel(levelToName(levelIdx));
+				}
+			}
+
+			if (isEditor) {
+				game::EditorController(editorContext);
+				if (editorContext.level != currentLevel) {
+					currentLevel = editorContext.level;
+				}
+			} else {
+				if (!currentLevel->flags.defeated) {
+					game::next(*currentLevel);
+				}
+			}
+
+			editorContext.level = currentLevel;
+
+			if (isGameCompleted) {
+				if (game::isKeyClicked(game::KEY_Q)) {
+					game::closeWindow();
+				}
+
+				game::DrawEndScreen();
+			} else {
+				game::DrawLevel(currentLevel);
 			}
 		}
-
-		editorContext.level = currentLevel;
-		game::DrawLevel(currentLevel);
 
 		game::swapBuffers();
 		game::windowSystemPollEvents();

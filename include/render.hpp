@@ -59,6 +59,8 @@ namespace game {
 	extern DrawInfo RockDrawInfo;
 	extern DrawInfo RockyGrassDrawInfo;
 	extern DrawInfo SaciDrawInfo;
+	extern DrawInfo TitleScreenDrawInfo;
+	extern DrawInfo EndScreenDrawInfo;
 
 	extern void CreateVao(RenderState* state, bool isStatic);
 

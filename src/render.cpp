@@ -30,6 +30,8 @@ namespace game {
 	DrawInfo RockyGrassDrawInfo;
 	DrawInfo SaciDrawInfo;
 	DrawInfo RestartDrawInfo;
+	DrawInfo TitleScreenDrawInfo;
+	DrawInfo EndScreenDrawInfo;
 	Camera* camera;
 
 	GLuint GenerateTexture(string const& filePath, bool useLinearFilter = false) {
@@ -72,6 +74,12 @@ namespace game {
 		BlockShader = new Shader("./shaders/block.vs", "./shaders/block.fs");
 		BackgroundShader = new Shader("./shaders/bg.vs", "./shaders/bg.fs");
 
+		TitleScreenDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(-1.0, -1.0), .WorldPosEnd = vec2(1.0, 1.0), }, { 0.3, 0.3, 0.3 });
+		TitleScreenDrawInfo.TextureRef = GenerateTexture("./assets/TitleScreen.png");
+		
+		EndScreenDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(-1.0, -1.0), .WorldPosEnd = vec2(1.0, 1.0), }, { 0.3, 0.3, 0.3 });
+		EndScreenDrawInfo.TextureRef = GenerateTexture("./assets/EndGameScreen.png");
+
 		RestartDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(-0.9, 0.0), .WorldPosEnd =vec2(0.9, 0.3) }, { 1.0, 1.0, 1.0 });
 		RestartDrawInfo.TextureRef = GenerateTexture("./assets/RestartText.png");
 
@@ -90,7 +98,6 @@ namespace game {
 		RockyGrassDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 0.1, 0.1, 0.1 });
 		RockyGrassDrawInfo.TextureRef = GenerateTexture("./assets/RockyGrass.png", true);
 
-
 		NextLevelPortalDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 1.0, 1.0, 1.0 });
 		NextLevelPortalDrawInfo.TextureRef = GenerateTexture("./assets/Portal.png");
 
@@ -102,7 +109,6 @@ namespace game {
 
 		RockDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 0.0, 0.0, 1.0 });
 		RockDrawInfo.TextureRef = GenerateTexture("./assets/Rock.png");
-
 
 		SaciDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 0.85, 0.85, 0.85 });
 		SaciDrawInfo.TextureRef = GenerateTexture("./assets/Saci.png");
