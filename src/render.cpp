@@ -72,7 +72,7 @@ namespace game {
 		BlockShader = new Shader("./shaders/block.vs", "./shaders/block.fs");
 		BackgroundShader = new Shader("./shaders/bg.vs", "./shaders/bg.fs");
 
-		RestartDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(-0.5, 0.0), .WorldPosEnd =vec2(0.5, 0.5) }, { 1.0, 1.0, 1.0 });
+		RestartDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(-0.9, 0.0), .WorldPosEnd =vec2(0.9, 0.3) }, { 1.0, 1.0, 1.0 });
 		RestartDrawInfo.TextureRef = GenerateTexture("./assets/RestartText.png");
 
 		TreeDrawInfo.BufferIndex = RenderAddBlock(WorldRenderState, { .WorldPosStart = vec2(0.0), .WorldPosEnd = vec2(1.0, 1.0) }, { 0.1, 1.0, 1.0 });

@@ -40,7 +40,6 @@ namespace game {
 		for (int i = 0; i < level->rockyGrassPos.size(); i++) {
 			ivec2 pos = level->rockyGrassPos[i];
 			Draw(RockyGrassDrawInfo, getClipPos(grid, pos.y, pos.x), cellScale);
-			//DrawBackground(RockyGrassDrawInfo);
 		}
 
 		for (u32 row = 0; row < grid->Height; row++) {
