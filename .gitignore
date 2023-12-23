@@ -2,3 +2,9 @@ build/
 build.out.dSYM/
 build.out
 .DS_Store/
+CMakeCache.txt
+.cmake/
+CMakeFiles/
+cmake_install.cmake
+*.a
+out
