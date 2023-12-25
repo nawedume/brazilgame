@@ -62,12 +62,12 @@ int main() {
 			if (game::isKeyClicked(game::KEY_R)) {
 				currentLevel = game::ReadLevel(currentLevel->levelName);
 			}
-
+#ifdef DEBUG
 			if (game::isKeyClicked(game::KEY_E)) {
 				isEditor = !isEditor;
 				printf("Editor mode: %d\n", isEditor);
 			}
-
+#endif
 			if (currentLevel->flags.completed) {
 
 				if (levelIdx == 8) {

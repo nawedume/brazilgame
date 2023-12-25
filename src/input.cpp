@@ -25,13 +25,14 @@ namespace game {
 
 	MM MouseMovement = {};
 
-	u32 clickMap[NUM_KEYS] {};
+	f64 clickMap[NUM_KEYS] {};
 	u32 currentFrame = 0;
 
 	bool isKeyClicked(int key) {
 		bool isClicked = glfwGetKey(window, key) == GLFW_PRESS;
-		if (isClicked && clickMap[key] < currentFrame) {
-			clickMap[key] = currentFrame + REFRESH_RATE;
+		f64 time = glfwGetTime();
+		if (isClicked && clickMap[key] < time) {
+			clickMap[key] = time + REFRESH_RATE;
 			return true;
 		}
 

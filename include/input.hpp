@@ -6,7 +6,7 @@
 
 namespace game {
 
-	const u8 REFRESH_RATE = 10;
+	const f64 REFRESH_RATE = 0.2;
 	extern const u32 KEY_E;
 	extern const u32 KEY_Q;
 	extern const u32 KEY_W;

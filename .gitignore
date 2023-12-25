@@ -8,3 +8,9 @@ CMakeFiles/
 cmake_install.cmake
 *.a
 out
+*.vcxproj
+Release/
+Debug/
+*.sln
+*.filters
+x64/

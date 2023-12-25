@@ -3,6 +3,7 @@
 #include <level.hpp>
 #include <input.hpp>
 #include <ai.hpp>
+#include <stdexcept>
 
 namespace game {
 	bool isWalkable(CellRef* ref) {
@@ -10,8 +11,11 @@ namespace game {
 	}
 
 	bool isValidMove(ivec2 position, Grid* grid) {
+		if (!game::isInBounds(position, grid)) {
+			return false;
+		}
 		game::CellRef* ref = grid->get(position.y, position.x); 
-		return game::isInBounds(position, grid) && (isWalkable(ref) || ref->type == Type::MOVEABLE);
+		return (isWalkable(ref) || ref->type == Type::MOVEABLE);
 	}
 
 	bool isValidSaciMove(ivec2 position, Grid* grid) {
@@ -24,8 +28,11 @@ namespace game {
 	}
 
 	bool isValidMoveableMove(ivec2 position, Grid* grid) {
+		if (!game::isInBounds(position, grid)) {
+			return false;
+		}
 		game::CellRef* ref = grid->get(position.y, position.x); 
-		return game::isInBounds(position, grid) && isPushableArea(ref);
+		return isPushableArea(ref);
 	}
 
 	ivec2 getDirectionFromEvent() {

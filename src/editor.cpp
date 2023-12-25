@@ -8,6 +8,7 @@
 #include <ai.hpp>
 #include <input.hpp>
 #include <editor.hpp>
+#include <algorithm>
 
 namespace game {
 	using namespace std;
